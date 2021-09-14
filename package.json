@@ -8,14 +8,14 @@
 		"type": "git",
 		"url": "git+https://github.com/ssangervasi/narrow-minded.git"
 	},
-	"main": "dist/narrow-minded.js",
-	"source": "src/narrow-minded.ts",
+	"main": "dist/index.js",
+	"source": "src/index.ts",
 	"engines": {
 		"node": "^16.1.0",
 		"npm": "^7.13.0"
 	},
 	"scripts": {
-		"build": "rm -rf dist/* npm run build-node",
+		"build": "rm -rf dist/* && npm run build-node",
 		"build-modern": "microbundle --target=node --format=modern",
 		"build-node": "microbundle --target=node --format=cjs",
 		"lint": "eslint --fix --cache src/**/*.ts tests/**/*.ts bin/**/*.ts",

@@ -2,15 +2,18 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"@babblebot/*": ["./src/*"]
+			"~/*": [
+				"./src/*"
+			]
 		},
-
 		// Syntax
-		"lib": ["dom", "dom.iterable", "esnext"],
-
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"esnext"
+		],
 		// Output
 		"outDir": "dist",
-
 		// General
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
@@ -33,5 +36,7 @@
 		"target": "ES6",
 		"resolveJsonModule": true
 	},
-	"include": ["src"]
+	"include": [
+		"src"
+	]
 }
