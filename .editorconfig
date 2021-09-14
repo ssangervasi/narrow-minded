@@ -1,0 +1,5 @@
+# Tab indentation of 2 spaces wide
+[*]
+indent_style = tab
+indent_size = 2
+end_of_line = lf
