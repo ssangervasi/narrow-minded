@@ -1,6 +1,6 @@
 import { sample } from 'lodash'
 
-import { narrow, some, Narrowable } from '../src/utils/narrow'
+import { narrow, some, Narrowable } from '~/narrow'
 
 describe('narrow value checking', () => {
 	it('works on primitives', () => {
@@ -268,7 +268,6 @@ describe('narrow conditional typing', () => {
 				u,
 			)
 		) {
-			const w: string | undefined = u.word
 			const osou: {
 				word?: string
 			} = u

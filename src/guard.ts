@@ -1,6 +1,7 @@
 import { narrow, Narrowable, UnNarrow } from './narrow'
 
 type Narrower<P> = (u: unknown) => u is P
+
 export class Guard<P> {
 	readonly p = null as unknown as P
 	readonly nf = (() => {}) as unknown as Narrower<P>
