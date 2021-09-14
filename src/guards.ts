@@ -1,37 +1,27 @@
-export interface Message<T extends string, P> {
-	type: T
-	payload: P
-}
+import { narrow, Narrowable, UnNarrow } from './narrow'
 
-export class Guard<T extends string, P> {
-	readonly M = null as unknown as Message<T, P>
-	readonly P = null as unknown as P
-	readonly T: T
+type Narrower<P> = (u: unknown) => u is P
+export class Guard<P> {
+	readonly p = null as unknown as P
+	readonly nf = (() => {}) as unknown as Narrower<P>
 
-	constructor(t: T) {
-		this.T = t
-	}
-
-	type<TOut extends T>(t: TOut) {
-		return new Guard<TOut, P>(t)
-	}
-
-	payload<POut>() {
-		return new Guard<T, POut>(this.T)
-	}
-
-	message(m: Message<string, unknown>): m is this['M'] {
-		return this.T === m.type
-	}
-
-	build<Tout extends this['T']>(
-		m: Omit<this['M'], 'type'> & { type?: Tout },
-	): this['M'] {
-		return {
-			type: this.T,
-			...m,
+	constructor(nf?: Narrower<P>) {
+		if (typeof nf == 'function') {
+			this.nf = nf
 		}
 	}
+
+	satisfied(u: unknown): u is this['p'] {
+		return this.nf(u)
+	}
+
+	build(p: this['p']): this['p'] {
+		return p
+	}
+
+	with<N extends Narrowable>(n: N) {
+		return new Guard((u: unknown): u is UnNarrow<N> => narrow(n, u))
+	}
 }
 
-export const guard = new Guard<string, unknown>('')
+export const guard = new Guard<unknown>()
