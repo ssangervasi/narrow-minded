@@ -18,6 +18,7 @@
 		"build": "rm -rf dist/* && npm run build-node",
 		"build-modern": "microbundle --target=node --format=modern",
 		"build-node": "microbundle --target=node --format=cjs",
+		"docs": "jsdoc -c jsdoc.json",
 		"lint": "eslint --fix --cache src/**/*.ts tests/**/*.ts bin/**/*.ts",
 		"jest": "jest --runTestsByPath",
 		"jest-watch": "jest --watch --runTestsByPath",
@@ -25,7 +26,6 @@
 		"test-watch": "jest --watch tests/*",
 		"watch": "tsc-watch"
 	},
-	"dependencies": {},
 	"devDependencies": {
 		"@babel/types": "^7.15.0",
 		"@types/jest": "^24.9.1",
@@ -33,9 +33,11 @@
 		"@types/node": "^12.20.19",
 		"@typescript-eslint/eslint-plugin": "^2.34",
 		"@typescript-eslint/parser": "^2.34",
+		"better-docs": "^2.3.2",
 		"eslint": "^6.7",
 		"jest": "^26.6.3",
 		"jest-diff": "^26.6.2",
+		"jsdoc": "^3.6.7",
 		"lodash": "^4.17.21",
 		"microbundle": "^0.13.0",
 		"ts-jest": "^26.5.6",

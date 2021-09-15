@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> narrow.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_narrow">_narrow</a></li><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>narrow.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>export type Primitive =
+	| 'string'
+	| 'number'
+	| 'bigint'
+	| 'boolean'
+	| 'symbol'
+	| 'undefined'
+	| 'object'
+	| 'function'
+export type NarrowableArr = Array&lt;
+	Primitive | NarrowableObj | NarrowableArr | NarrowableSome
+>
+export interface NarrowableObj {
+	[k: string]: Primitive | NarrowableArr | NarrowableObj | NarrowableSome
+}
+export type Narrowable =
+	| Primitive
+	| NarrowableArr
+	| NarrowableObj
+	| NarrowableSome
+
+export type UnPrimitive&lt;N> = /*
+ */ N extends 'string'
+	? string
+	: N extends 'number'
+	? number
+	: N extends 'bigint'
+	? bigint
+	: N extends 'boolean'
+	? boolean
+	: N extends 'symbol'
+	? symbol
+	: N extends 'undefined'
+	? undefined
+	: N extends 'object'
+	? object
+	: N extends 'function'
+	? Function
+	: unknown
+export type UnNarrow&lt;N> = /*
+ */ N extends Primitive
+	? UnPrimitive&lt;N>
+	: N extends Array&lt;infer N2>
+	? N extends NarrowableSome
+		? UnNarrow&lt;N2>
+		: Array&lt;UnNarrow&lt;N2>>
+	: N extends Record&lt;keyof N, infer _N2>
+	? { [k in keyof N]: UnNarrow&lt;N[k]> }
+	: unknown
+
+/**
+ *
+ * @param n The Narrowable schema.
+ * @param u The value of unknown type to validate.
+ * @returns A type predicate that `u` satisfies `n`.
+ */
+export const narrow = &lt;N extends Primitive | NarrowableArr | NarrowableObj>(
+	n: N,
+	u: unknown,
+): u is UnNarrow&lt;N> => {
+	return _narrow(n, u)
+}
+
+export const SOME = Symbol('SOME')
+export type NarrowableSome = {
+	[SOME]: boolean
+}
+
+/**
+ * Decorates a narrowable array to indicate narrowing should use the array as a
+ * set of options instead of asserting the value is an actual array.
+ * @param opts The Narrowable types that the value must be one of.
+ * @returns An array with the SOME symbol set to true.
+ */
+export const some = &lt;NA extends NarrowableArr>(
+	...opts: NA
+): NA &amp; NarrowableSome => {
+	return Object.assign(opts, {
+		[SOME]: true,
+	})
+}
+
+/**
+ * This does the actual value comparison based on the Narrowable schema.
+ * It leaves out the fancy type inference.
+ * @param n The schema.
+ * @param u The value to validate.
+ * @returns Whether u matches n.
+ */
+const _narrow = &lt;N extends Narrowable>(n: N, u: unknown): boolean => {
+	if (typeof n === 'string') {
+		if (n === typeof u) {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	if (Array.isArray(n)) {
+		if (SOME in n) {
+			return n.some(t => _narrow(t, u))
+		} else {
+			if (Array.isArray(u)) {
+				return u.every(v => n.some(t => _narrow(t, v)))
+			} else {
+				return false
+			}
+		}
+	}
+
+	if (typeof u !== 'object' || u === null) {
+		return false
+	}
+
+	const o = u as NarrowableObj
+
+	return Object.entries(n).every(([k, t]) => _narrow(t, o[k]))
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

@@ -1,2 +1,2 @@
 export { narrow } from './narrow'
-export { guard } from './guards'
+export { unknown, Guard } from './guard'

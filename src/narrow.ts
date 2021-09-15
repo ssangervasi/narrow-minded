@@ -51,8 +51,8 @@ export type UnNarrow<N> = /*
 /**
  *
  * @param n The Narrowable schema.
- * @param u The value of unkown type to validate.
- * @returns A type assertion that `u` satisfies `n`.
+ * @param u The value of unknown type to validate.
+ * @returns A type predicate that `u` satisfies `n`.
  */
 export const narrow = <N extends Primitive | NarrowableArr | NarrowableObj>(
 	n: N,

@@ -1,0 +1,201 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> guard.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_narrow">_narrow</a></li><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>guard.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { narrow, Narrowable, UnNarrow } from './narrow'
+
+export type NarrowingFunction&lt;P> = (u: unknown) => u is P
+export type Payload&lt;G> = G extends Guard&lt;infer P> ? P : unknown
+
+/**
+ *
+ */
+export class Guard&lt;P> {
+	/**
+	 * Creates a new guard that uses a `narrow` function.
+	 * A little shortcut for `new Guard(narrow(...))`
+	 * ```
+	 * 	import { Guard } from 'narrow-minded'
+	 * 	const myGuard = Guard.narrow(['string', 'number'])
+	 * 	myGuard.satisfied(['horse', 42]) // => true
+	 * ```
+	 * @param n Narrowable
+	 * @returns Guard
+	 */
+	static narrow&lt;N extends Narrowable>(n: N) {
+		return new Guard((u: unknown): u is UnNarrow&lt;N> => narrow(n, u))
+	}
+
+	readonly NF: NarrowingFunction&lt;P>
+
+	constructor(NF: NarrowingFunction&lt;P>) {
+		this.NF = NF
+	}
+
+	/**
+	 * Runs the guard's narrowing function to validate the unknown value's type.
+	 * Operates as a type predicate so conditional blocks infer this structure.
+	 * ```
+	 * const myGuard = Guard.narrow({
+	 * 	name: 'string',
+	 * 	values: ['number'],
+	 * })
+	 *
+	 * const good: unknown = { name: 'Horse', values: [1, 2] }
+	 * if (myGuard.satisfied(good)) {
+	 * 	console.log('Good ' + good.name)
+	 * 	// => 'Good Horse'
+	 * }
+	 *
+	 * const bad: unknown = { name: 42, values: 'Nope' }
+	 * if (!myGuard.satisfied(bad)) {
+	 * 	console.log('Bad ')
+	 * 	// => 'Bad'
+	 * }
+	 * ```
+	 * @param u The unknown value.
+	 * @returns A type predicate that `u` satisfies this guard.
+	 */
+	satisfied(u: unknown): u is P {
+		return this.NF(u)
+	}
+
+	/**
+	 * An identity function that returns the value passed to it. Useful for
+	 * defining objects that satisfy this guard using type inference.
+	 * @param p
+	 * @returns p
+	 */
+	build(p: P): P {
+		return p
+	}
+
+	and&lt;N extends Narrowable>(n: N) {
+		const prev = this.NF
+		return new Guard(
+			(u: unknown): u is P &amp; UnNarrow&lt;N> => prev(u) &amp;&amp; narrow(n, u),
+		)
+	}
+}
+
+/**
+ * A singleton that can be used to build `and` chains.
+ * ```
+ * if (unknown.and('string').satisfied('Great')) {
+ * 	console.log('Great')
+ * }
+ * ```
+ */
+export const unknown = new Guard&lt;unknown>((_): _ is unknown => true)
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>
