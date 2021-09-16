@@ -1,6 +1,6 @@
 import { sample } from 'lodash'
 
-import { narrow, some, Narrowable } from '~/narrow'
+import { narrow, some, Narrower } from '~/narrow'
 
 describe('narrow value checking', () => {
 	it('works on primitives', () => {
@@ -10,7 +10,7 @@ describe('narrow value checking', () => {
 	})
 
 	it('works on object schemas', () => {
-		const schema: Narrowable = {
+		const schema: Narrower = {
 			horse: 'number',
 			nest: {
 				bird: 'string',
@@ -190,7 +190,7 @@ describe('narrow conditional typing', () => {
 	})
 
 	it('works with typeof', () => {
-		const n: Narrowable = {
+		const n: Narrower = {
 			name: 'string',
 			hooves: some('number', 'undefined'),
 			baby: {

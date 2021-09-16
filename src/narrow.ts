@@ -1,3 +1,6 @@
+/**
+ * Includes all values that can be returned by a `typeof` expression.
+ */
 export type Primitive =
 	| 'string'
 	| 'number'
@@ -7,17 +10,19 @@ export type Primitive =
 	| 'undefined'
 	| 'object'
 	| 'function'
-export type NarrowableArr = Array<
-	Primitive | NarrowableObj | NarrowableArr | NarrowableSome
+export type NarrowerArr = Array<
+	Primitive | NarrowerObj | NarrowerArr | NarrowerSome
 >
-export interface NarrowableObj {
-	[k: string]: Primitive | NarrowableArr | NarrowableObj | NarrowableSome
+export interface NarrowerObj {
+	[k: string]: Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 }
-export type Narrowable =
-	| Primitive
-	| NarrowableArr
-	| NarrowableObj
-	| NarrowableSome
+
+/**
+ * This is the type that specifies a narrowed structure. The simplest form is a Primitive string,
+ * which will validate using a `typeof` comparison. Deeper structures can be defined using objects
+ * and arrays that will be validated recursively.
+ */
+export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 
 export type UnPrimitive<N> = /*
  */ N extends 'string'
@@ -41,7 +46,7 @@ export type UnNarrow<N> = /*
  */ N extends Primitive
 	? UnPrimitive<N>
 	: N extends Array<infer N2>
-	? N extends NarrowableSome
+	? N extends NarrowerSome
 		? UnNarrow<N2>
 		: Array<UnNarrow<N2>>
 	: N extends Record<keyof N, infer _N2>
@@ -50,11 +55,11 @@ export type UnNarrow<N> = /*
 
 /**
  *
- * @param n The Narrowable schema.
+ * @param n The Narrower schema.
  * @param u The value of unknown type to validate.
  * @returns A type predicate that `u` satisfies `n`.
  */
-export const narrow = <N extends Primitive | NarrowableArr | NarrowableObj>(
+export const narrow = <N extends Primitive | NarrowerArr | NarrowerObj>(
 	n: N,
 	u: unknown,
 ): u is UnNarrow<N> => {
@@ -62,33 +67,33 @@ export const narrow = <N extends Primitive | NarrowableArr | NarrowableObj>(
 }
 
 export const SOME = Symbol('SOME')
-export type NarrowableSome = {
+export type NarrowerSome = {
 	[SOME]: boolean
 }
 
 /**
- * Decorates a narrowable array to indicate narrowing should use the array as a
+ * Decorates a narrower array to indicate narrowing should use the array as a
  * set of options instead of asserting the value is an actual array.
- * @param opts The Narrowable types that the value must be one of.
+ * @param opts The Narrower types that the value must be one of.
  * @returns An array with the SOME symbol set to true.
  */
-export const some = <NA extends NarrowableArr>(
+export const some = <NA extends NarrowerArr>(
 	...opts: NA
-): NA & NarrowableSome => {
+): NA & NarrowerSome => {
 	return Object.assign(opts, {
 		[SOME]: true,
 	})
 }
 
 /**
- * This does the actual value comparison based on the Narrowable schema.
+ * This does the actual value comparison based on the Narrower schema.
  * It leaves out the fancy type inference.
  * @private
  * @param n The schema.
  * @param u The value to validate.
  * @returns Whether u matches n.
  */
-const _narrow = <N extends Narrowable>(n: N, u: unknown): boolean => {
+const _narrow = <N extends Narrower>(n: N, u: unknown): boolean => {
 	if (typeof n === 'string') {
 		if (n === typeof u) {
 			return true
@@ -113,7 +118,7 @@ const _narrow = <N extends Narrowable>(n: N, u: unknown): boolean => {
 		return false
 	}
 
-	const o = u as NarrowableObj
+	const o = u as NarrowerObj
 
 	return Object.entries(n).every(([k, t]) => _narrow(t, o[k]))
 }

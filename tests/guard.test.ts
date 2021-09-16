@@ -133,7 +133,7 @@ describe('Guard#and', () => {
 		).toBe(false)
 	})
 
-	it('works with a Narrowable', () => {
+	it('works with a Narrower', () => {
 		const hasHorse = Guard.narrow({ horse: 'string' })
 		const hasHorseAndCow = hasHorse.and({ cow: 'number' })
 
@@ -198,5 +198,11 @@ describe('Doc Tests', () => {
 	test('Guard.narrow', () => {
 		const myGuard = Guard.narrow(['string', 'number'])
 		myGuard.satisfied(['horse', 42])
+	})
+
+	test('unknown', () => {
+		if (unknown.and('string').satisfied('Great')) {
+			console.log('Great')
+		}
 	})
 })
