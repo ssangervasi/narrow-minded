@@ -95,7 +95,7 @@ describe('Guard#build', () => {
 })
 
 describe('Guard#and', () => {
-	it('works', () => {
+	it('works with a Guard', () => {
 		const hasHorse = Guard.narrow({ horse: 'string' })
 		const hasHorseAndCow = hasHorse.and(Guard.narrow({ cow: 'number' }))
 
@@ -131,6 +131,33 @@ describe('Guard#and', () => {
 				cow: 52,
 			}),
 		).toBe(false)
+	})
+
+	it('works with a Narrowable', () => {
+		const hasHorse = Guard.narrow({ horse: 'string' })
+		const hasHorseAndCow = hasHorse.and({ cow: 'number' })
+
+		expect(
+			hasHorseAndCow.satisfied({
+				horse: 'neigh',
+				cow: 52,
+			}),
+		).toBe(true)
+	})
+
+	it('works with a NarrowingFunction', () => {
+		const hasHorse = Guard.narrow({ horse: 'string' })
+		const hasHorseAndCow = hasHorse.and(
+			//
+			(u: unknown): u is { cow: number } => narrow({ cow: 'number' }, u),
+		)
+
+		expect(
+			hasHorseAndCow.satisfied({
+				horse: 'neigh',
+				cow: 52,
+			}),
+		).toBe(true)
 	})
 
 	it('infers types', () => {

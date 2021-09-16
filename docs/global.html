@@ -66,7 +66,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_narrow">_narrow</a></li><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
                 
             </nav>
         </div>
@@ -242,8 +242,8 @@
 
 
 <div class="description">
-    Decorates a narrowable array to indicate narrowing should use the array as a
-set of options instead of asserting the value is an actual array.
+    <p>Decorates a narrowable array to indicate narrowing should use the array as a
+set of options instead of asserting the value is an actual array.</p>
 </div>
 
 
@@ -316,12 +316,7 @@ set of options instead of asserting the value is an actual array.
 
 
 <div class="description">
-    A singleton that can be used to build `and` chains.
-```
-if (unknown.and('string').satisfied('Great')) {
-	console.log('Great')
-}
-```
+    <p>A singleton that can be used to build <code>and</code> chains.</p>
 </div>
 
 
@@ -363,7 +358,7 @@ if (unknown.and('string').satisfied('Great')) {
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line73">line 73</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line77">line 77</a>
             </span>
         </p>
     
@@ -373,200 +368,23 @@ if (unknown.and('string').satisfied('Great')) {
 
 
 
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>```
+if (unknown.and('string').satisfied('Great')) {
+	console.log('Great')
+}
+```</code></pre>
+    
+
+
 </div>
             
             </div>
         </div>
     
 
-    
-        <div class='vertical-section'>
-            <h1>Methods</h1>
-            <div class="members">
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="_narrow">
-        <a class="href-link" href="#_narrow">#</a>
-        
-        <span class="code-name">
-            
-                _narrow<span class="signature">(n, u)</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        This does the actual value comparison based on the Narrowable schema.
-It leaves out the fancy type inference.
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>n</code></td>
-  
-
-  <td class="type">
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last">The schema.</td>
-</tr>
-
-
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>u</code></td>
-  
-
-  <td class="type">
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last">The value to validate.</td>
-</tr>
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="narrow.ts.html" class="button">View Source</a>
-            <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line30">line 30</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'>Whether u matches n.</div>
-    
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-            </div>
-        </div>
     
 
     

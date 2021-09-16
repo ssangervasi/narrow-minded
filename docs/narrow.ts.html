@@ -68,7 +68,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_narrow">_narrow</a></li><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
                 
             </nav>
         </div>
@@ -170,6 +170,7 @@ export const some = &lt;NA extends NarrowableArr>(
 /**
  * This does the actual value comparison based on the Narrowable schema.
  * It leaves out the fancy type inference.
+ * @private
  * @param n The schema.
  * @param u The value to validate.
  * @returns Whether u matches n.

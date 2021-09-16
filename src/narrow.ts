@@ -83,6 +83,7 @@ export const some = <NA extends NarrowableArr>(
 /**
  * This does the actual value comparison based on the Narrowable schema.
  * It leaves out the fancy type inference.
+ * @private
  * @param n The schema.
  * @param u The value to validate.
  * @returns Whether u matches n.

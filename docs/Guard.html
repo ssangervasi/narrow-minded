@@ -66,7 +66,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_narrow">_narrow</a></li><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
                 
             </nav>
         </div>
@@ -247,13 +247,8 @@
     
     
     <div class="description">
-        Creates a new guard that uses a `narrow` function.
-A little shortcut for `new Guard(narrow(...))`
-```
-	import { Guard } from 'narrow-minded'
-	const myGuard = Guard.narrow(['string', 'number'])
-	myGuard.satisfied(['horse', 42]) // => true
-```
+        <p>Creates a new guard that uses a <code>narrow</code> function.
+A little shortcut for <code>new Guard(narrow(...))</code>.</p>
     </div>
     
 
@@ -302,7 +297,7 @@ A little shortcut for `new Guard(narrow(...))`
 
   
 
-  <td class="description last">Narrowable</td>
+  <td class="description last"><p>Narrowable</p></td>
 </tr>
 
 
@@ -350,7 +345,7 @@ A little shortcut for `new Guard(narrow(...))`
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line21">line 21</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line22">line 22</a>
             </span>
         </p>
     
@@ -381,7 +376,7 @@ A little shortcut for `new Guard(narrow(...))`
 
 <div class="columns">
     
-    <div class='param-desc column is-7'>Guard</div>
+    <div class='param-desc column is-7'><p>Guard</p></div>
     
     
 </div>
@@ -391,6 +386,17 @@ A little shortcut for `new Guard(narrow(...))`
     </div>
 
 
+
+
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>```
+import { Guard } from 'narrow-minded'
+const myGuard = Guard.narrow(['string', 'number'])
+myGuard.satisfied(['horse', 42]) // => true
+```</code></pre>
+    
 
 
 </div>
@@ -413,8 +419,8 @@ A little shortcut for `new Guard(narrow(...))`
     
     
     <div class="description">
-        An identity function that returns the value passed to it. Useful for
-defining objects that satisfy this guard using type inference.
+        <p>An identity function that returns the value passed to it. Useful for
+defining objects that satisfy this guard using type inference.</p>
     </div>
     
 
@@ -511,7 +517,7 @@ defining objects that satisfy this guard using type inference.
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line57">line 57</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line59">line 59</a>
             </span>
         </p>
     
@@ -542,7 +548,7 @@ defining objects that satisfy this guard using type inference.
 
 <div class="columns">
     
-    <div class='param-desc column is-7'>p</div>
+    <div class='param-desc column is-7'><p>p</p></div>
     
     
 </div>
@@ -574,26 +580,8 @@ defining objects that satisfy this guard using type inference.
     
     
     <div class="description">
-        Runs the guard's narrowing function to validate the unknown value's type.
-Operates as a type predicate so conditional blocks infer this structure.
-```
-const myGuard = Guard.narrow({
-	name: 'string',
-	values: ['number'],
-})
-
-const good: unknown = { name: 'Horse', values: [1, 2] }
-if (myGuard.satisfied(good)) {
-	console.log('Good ' + good.name)
-	// => 'Good Horse'
-}
-
-const bad: unknown = { name: 42, values: 'Nope' }
-if (!myGuard.satisfied(bad)) {
-	console.log('Bad ')
-	// => 'Bad'
-}
-```
+        <p>Runs the guard's narrowing function to validate the unknown value's type.
+Operates as a type predicate so conditional blocks infer this structure.</p>
     </div>
     
 
@@ -642,7 +630,7 @@ if (!myGuard.satisfied(bad)) {
 
   
 
-  <td class="description last">The unknown value.</td>
+  <td class="description last"><p>The unknown value.</p></td>
 </tr>
 
 
@@ -690,7 +678,7 @@ if (!myGuard.satisfied(bad)) {
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line48">line 48</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line50">line 50</a>
             </span>
         </p>
     
@@ -721,7 +709,7 @@ if (!myGuard.satisfied(bad)) {
 
 <div class="columns">
     
-    <div class='param-desc column is-7'>A type predicate that `u` satisfies this guard.</div>
+    <div class='param-desc column is-7'><p>A type predicate that <code>u</code> satisfies this guard.</p></div>
     
     
 </div>
@@ -731,6 +719,30 @@ if (!myGuard.satisfied(bad)) {
     </div>
 
 
+
+
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>```
+const myGuard = Guard.narrow({
+	name: 'string',
+	values: ['number'],
+})
+
+const good: unknown = { name: 'Horse', values: [1, 2] }
+if (myGuard.satisfied(good)) {
+	console.log('Good ' + good.name)
+	// => 'Good Horse'
+}
+
+const bad: unknown = { name: 42, values: 'Nope' }
+if (!myGuard.satisfied(bad)) {
+	console.log('Bad ')
+	// => 'Bad'
+}
+```</code></pre>
+    
 
 
 </div>

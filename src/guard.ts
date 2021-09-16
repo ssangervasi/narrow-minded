@@ -1,4 +1,4 @@
-import { narrow, Narrowable, UnNarrow, SOME } from './narrow'
+import { narrow, Narrowable, UnNarrow } from './narrow'
 
 export type NarrowingFunction<P> = (u: unknown) => u is P
 export type Payload<G> = G extends Guard<infer P> ? P : unknown
@@ -9,11 +9,12 @@ export type Payload<G> = G extends Guard<infer P> ? P : unknown
 export class Guard<P> {
 	/**
 	 * Creates a new guard that uses a `narrow` function.
-	 * A little shortcut for `new Guard(narrow(...))`
+	 * A little shortcut for `new Guard(narrow(...))`.
+	 * @example
 	 * ```
-	 * 	import { Guard } from 'narrow-minded'
-	 * 	const myGuard = Guard.narrow(['string', 'number'])
-	 * 	myGuard.satisfied(['horse', 42]) // => true
+	 * import { Guard } from 'narrow-minded'
+	 * const myGuard = Guard.narrow(['string', 'number'])
+	 * myGuard.satisfied(['horse', 42]) // => true
 	 * ```
 	 * @param n Narrowable
 	 * @returns Guard
@@ -31,6 +32,7 @@ export class Guard<P> {
 	/**
 	 * Runs the guard's narrowing function to validate the unknown value's type.
 	 * Operates as a type predicate so conditional blocks infer this structure.
+	 * @example
 	 * ```
 	 * const myGuard = Guard.narrow({
 	 * 	name: 'string',
@@ -66,15 +68,21 @@ export class Guard<P> {
 		return p
 	}
 
-	and<P2>(other: Guard<P2>) {
+	and<P2>(other: Guard<P2> | NarrowingFunction<P2> | Narrowable) {
 		const left = this.NF
-		const right = other.NF
+		const right =
+			other instanceof Guard
+				? other.NF
+				: other instanceof Function
+				? other
+				: (u: unknown): u is P2 => narrow(other, u)
 		return new Guard((u: unknown): u is P & P2 => left(u) && right(u))
 	}
 }
 
 /**
  * A singleton that can be used to build `and` chains.
+ * @example
  * ```
  * if (unknown.and('string').satisfied('Great')) {
  * 	console.log('Great')

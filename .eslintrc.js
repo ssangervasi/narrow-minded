@@ -21,7 +21,14 @@ module.exports = {
 	plugins: ['@typescript-eslint'],
 	rules: {
 		'comma-dangle': ['error', 'always-multiline'],
-		indent: ['error', 'tab'],
+		indent: [
+			'error',
+			'tab',
+			{
+				flatTernaryExpressions: true,
+				offsetTernaryExpressions: false,
+			},
+		],
 		'max-len': [
 			'error',
 			{

@@ -68,7 +68,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_narrow">_narrow</a></li><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
                 
             </nav>
         </div>
@@ -85,7 +85,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { narrow, Narrowable, UnNarrow } from './narrow'
+            <pre class="prettyprint source linenums"><code>import { narrow, Narrowable, UnNarrow, SOME } from './narrow'
 
 export type NarrowingFunction&lt;P> = (u: unknown) => u is P
 export type Payload&lt;G> = G extends Guard&lt;infer P> ? P : unknown
@@ -96,11 +96,12 @@ export type Payload&lt;G> = G extends Guard&lt;infer P> ? P : unknown
 export class Guard&lt;P> {
 	/**
 	 * Creates a new guard that uses a `narrow` function.
-	 * A little shortcut for `new Guard(narrow(...))`
+	 * A little shortcut for `new Guard(narrow(...))`.
+	 * @example
 	 * ```
-	 * 	import { Guard } from 'narrow-minded'
-	 * 	const myGuard = Guard.narrow(['string', 'number'])
-	 * 	myGuard.satisfied(['horse', 42]) // => true
+	 * import { Guard } from 'narrow-minded'
+	 * const myGuard = Guard.narrow(['string', 'number'])
+	 * myGuard.satisfied(['horse', 42]) // => true
 	 * ```
 	 * @param n Narrowable
 	 * @returns Guard
@@ -118,6 +119,7 @@ export class Guard&lt;P> {
 	/**
 	 * Runs the guard's narrowing function to validate the unknown value's type.
 	 * Operates as a type predicate so conditional blocks infer this structure.
+	 * @example
 	 * ```
 	 * const myGuard = Guard.narrow({
 	 * 	name: 'string',
@@ -153,16 +155,16 @@ export class Guard&lt;P> {
 		return p
 	}
 
-	and&lt;N extends Narrowable>(n: N) {
-		const prev = this.NF
-		return new Guard(
-			(u: unknown): u is P &amp; UnNarrow&lt;N> => prev(u) &amp;&amp; narrow(n, u),
-		)
+	and&lt;P2>(other: Guard&lt;P2>) {
+		const left = this.NF
+		const right = other.NF
+		return new Guard((u: unknown): u is P &amp; P2 => left(u) &amp;&amp; right(u))
 	}
 }
 
 /**
  * A singleton that can be used to build `and` chains.
+ * @example
  * ```
  * if (unknown.and('string').satisfied('Great')) {
  * 	console.log('Great')
