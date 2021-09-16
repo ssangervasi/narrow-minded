@@ -85,7 +85,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { narrow, Narrowable, UnNarrow, SOME } from './narrow'
+            <pre class="prettyprint source linenums"><code>import { narrow, Narrower, UnNarrow } from './narrow'
 
 export type NarrowingFunction&lt;P> = (u: unknown) => u is P
 export type Payload&lt;G> = G extends Guard&lt;infer P> ? P : unknown
@@ -103,10 +103,10 @@ export class Guard&lt;P> {
 	 * const myGuard = Guard.narrow(['string', 'number'])
 	 * myGuard.satisfied(['horse', 42]) // => true
 	 * ```
-	 * @param n Narrowable
+	 * @param n Narrower
 	 * @returns Guard
 	 */
-	static narrow&lt;N extends Narrowable>(n: N) {
+	static narrow&lt;N extends Narrower>(n: N) {
 		return new Guard((u: unknown): u is UnNarrow&lt;N> => narrow(n, u))
 	}
 
@@ -155,9 +155,14 @@ export class Guard&lt;P> {
 		return p
 	}
 
-	and&lt;P2>(other: Guard&lt;P2>) {
+	and&lt;P2>(other: Guard&lt;P2> | NarrowingFunction&lt;P2> | Narrower) {
 		const left = this.NF
-		const right = other.NF
+		const right =
+			other instanceof Guard
+				? other.NF
+				: other instanceof Function
+				? other
+				: (u: unknown): u is P2 => narrow(other, u)
 		return new Guard((u: unknown): u is P &amp; P2 => left(u) &amp;&amp; right(u))
 	}
 }

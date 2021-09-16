@@ -172,6 +172,22 @@
 
 
 
+<div class="description">
+    <p>This function validates any value with <code>typeof</code> checks. Arrays and objects are traversed
+according to the Narrower structure. The boolean return value is also a TypeScript type
+predicate.</p>
+<p><strong>Objects</strong> -
+All keys of <code>n</code> are checked against <code>u</code> and their narrow is validated if the key exists.
+Keys that are missing from <code>u</code> are treated as having the value <code>undefined</code>. This means
+you can use <code>{ key: some('undefined', ...)}</code> to allow for missing/optional keys.</p>
+<p><strong>Arrays</strong> -
+Including multiple types in a Narrower array allows for mixed types. Each item in <code>u</code> must
+satisfy at least one of the types.</p>
+<p><strong>Null</strong> -
+<code>typeof null</code> is <code>'object'</code> but null cannot have any keys. Use <code>{}</code> to match an object
+that is not null.</p>
+</div>
+
 
 
 
@@ -211,7 +227,7 @@
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line8">line 8</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line56">line 56</a>
             </span>
         </p>
     
@@ -219,6 +235,43 @@
 
 
 
+
+
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>```
+// An array of mixed strings and numbers:
+narrow(['string', 'number'], [1, 'two']) //=> true
+narrow(['string', 'number'], [{}]) //=> false
+
+// Null:
+narrow('object', null) //=> true
+narrow({}, null) //=> false
+
+// A deep object:
+narrow({
+	n: 'number',
+	child: {
+		word: 'string'
+	},
+	things: [
+		['number'],
+		'boolean'
+	],
+}, {
+	n: 3.14,
+	child: {
+		word: 'Yes'
+	},
+	things: [
+		false,
+		[1, 2, 3],
+		true
+	]
+}) //=> true
+```</code></pre>
+    
 
 
 </div>
@@ -242,7 +295,7 @@
 
 
 <div class="description">
-    <p>Decorates a narrowable array to indicate narrowing should use the array as a
+    <p>Decorates a narrower array to indicate narrowing should use the array as a
 set of options instead of asserting the value is an actual array.</p>
 </div>
 
@@ -285,7 +338,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line18">line 18</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line66">line 66</a>
             </span>
         </p>
     
@@ -358,7 +411,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line77">line 77</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line81">line 81</a>
             </span>
         </p>
     

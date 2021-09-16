@@ -21,6 +21,23 @@ export interface NarrowerObj {
  * This is the type that specifies a narrowed structure. The simplest form is a Primitive string,
  * which will validate using a `typeof` comparison. Deeper structures can be defined using objects
  * and arrays that will be validated recursively.
+ * @example
+ * ```
+ * // An array of mixed strings and numbers:
+ * ['string', 'number']
+ *
+ * // A deep object:
+ * {
+ * 	n: 'number',
+ * 	child: {
+ * 		word: 'string'
+ * 	},
+ * 	things: [
+ * 		['number'],
+ * 		'boolean'
+ * 	],
+ * }
+ * ```
  */
 export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 
@@ -54,7 +71,55 @@ export type UnNarrow<N> = /*
 	: unknown
 
 /**
+ * This function validates any value with `typeof` checks. Arrays and objects are traversed
+ * according to the Narrower structure. The boolean return value is also a TypeScript type
+ * predicate.
  *
+ * **Objects** -
+ * All keys of `n` are checked against `u` and their narrow is validated if the key exists.
+ * Keys that are missing from `u` are treated as having the value `undefined`. This means
+ * you can use `{ key: some('undefined', ...)}` to allow for missing/optional keys.
+ *
+ * **Arrays** -
+ * Including multiple types in a Narrower array allows for mixed types. Each item in `u` must
+ * satisfy at least one of the types.
+ *
+ * **Null** -
+ * `typeof null` is `'object'` but null cannot have any keys. Use `{}` to match an object
+ * that is not null.
+ *
+ * @example
+ * ```
+ * // An array of mixed strings and numbers:
+ * narrow(['string', 'number'], [1, 'two']) //=> true
+ * narrow(['string', 'number'], [{}]) //=> false
+ *
+ * // Null:
+ * narrow('object', null) //=> true
+ * narrow({}, null) //=> false
+ *
+ * // A deep object:
+ * narrow({
+ * 	n: 'number',
+ * 	child: {
+ * 		word: 'string'
+ * 	},
+ * 	things: [
+ * 		['number'],
+ * 		'boolean'
+ * 	],
+ * }, {
+ * 	n: 3.14,
+ * 	child: {
+ * 		word: 'Yes'
+ * 	},
+ * 	things: [
+ * 		false,
+ * 		[1, 2, 3],
+ * 		true
+ * 	]
+ * }) //=> true
+ * ```
  * @param n The Narrower schema.
  * @param u The value of unknown type to validate.
  * @returns A type predicate that `u` satisfies `n`.

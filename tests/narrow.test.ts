@@ -9,6 +9,13 @@ describe('narrow value checking', () => {
 		expect(narrow('string', 1)).toBe(false)
 	})
 
+	it('works on null', () => {
+		expect(narrow('object', null)).toBe(true)
+
+		expect(narrow({}, false)).toBe(true)
+		expect(narrow({ horse: 'string' }, null)).toBe(false)
+	})
+
 	it('works on object schemas', () => {
 		const schema: Narrower = {
 			horse: 'number',
