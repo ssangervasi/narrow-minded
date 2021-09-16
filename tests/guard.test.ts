@@ -97,7 +97,7 @@ describe('Guard#build', () => {
 describe('Guard#and', () => {
 	it('works', () => {
 		const hasHorse = Guard.narrow({ horse: 'string' })
-		const hasHorseAndCow = hasHorse.and({ cow: 'number' })
+		const hasHorseAndCow = hasHorse.and(Guard.narrow({ cow: 'number' }))
 
 		expect(
 			hasHorseAndCow.satisfied({
@@ -134,7 +134,9 @@ describe('Guard#and', () => {
 	})
 
 	it('infers types', () => {
-		const g = unknown.and({ horse: 'string' }).and({ cow: 'number' })
+		const g = unknown
+			.and(Guard.narrow({ horse: 'string' }))
+			.and(Guard.narrow({ cow: 'number' }))
 		const u: unknown = {
 			horse: 'neigh',
 			cow: 52,

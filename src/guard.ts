@@ -1,4 +1,4 @@
-import { narrow, Narrowable, UnNarrow } from './narrow'
+import { narrow, Narrowable, UnNarrow, SOME } from './narrow'
 
 export type NarrowingFunction<P> = (u: unknown) => u is P
 export type Payload<G> = G extends Guard<infer P> ? P : unknown
@@ -66,11 +66,10 @@ export class Guard<P> {
 		return p
 	}
 
-	and<N extends Narrowable>(n: N) {
-		const prev = this.NF
-		return new Guard(
-			(u: unknown): u is P & UnNarrow<N> => prev(u) && narrow(n, u),
-		)
+	and<P2>(other: Guard<P2>) {
+		const left = this.NF
+		const right = other.NF
+		return new Guard((u: unknown): u is P & P2 => left(u) && right(u))
 	}
 }
 
