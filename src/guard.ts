@@ -68,7 +68,24 @@ export class Guard<P> {
 		return p
 	}
 
-	and<P2>(other: Guard<P2> | NarrowingFunction<P2> | Narrower) {
+	/**
+	 * Creates a new guard that will satisfy the constraints of `this` AND `other`.
+	 * Useful for combining primitive narrows with more complex type checking.
+	 * @example
+	 * ```
+	 * const myGuard = Guard.narrow({ type: 'string' }).and(
+	 * 	(u: unknown): u is { type: 'this' | 'that' } =>
+	 * 		['this', 'that'].includes((u as any).type),
+	 * )
+	 * ```
+	 *
+	 * @param other - The or with a Narrower/NarrowerFunction which will
+	 * be wrapped into a Guard automatically.
+	 * @return Guard
+	 */
+	and<N extends Narrower>(other: N): Guard<P & UnNarrow<N>>
+	and<P2>(other: Guard<P2> | NarrowingFunction<P2>): Guard<P & P2>
+	and<P2>(other: any) {
 		const left = this.NF
 		const right =
 			other instanceof Guard
