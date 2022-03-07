@@ -12,7 +12,7 @@ describe('narrow value checking', () => {
 	it('works on null', () => {
 		expect(narrow('object', null)).toBe(true)
 
-		expect(narrow({}, false)).toBe(true)
+		expect(narrow({}, null)).toBe(false)
 		expect(narrow({ horse: 'string' }, null)).toBe(false)
 	})
 
