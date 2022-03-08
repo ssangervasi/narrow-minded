@@ -10,7 +10,7 @@
 	},
 	"source": "src/index.ts",
 	"main": "dist/index.js",
-  "exports": "./dist/index.modern.js",
+	"exports": "./dist/index.modern.js",
 	"types": "dist/index.d.ts",
 	"engines": {
 		"node": ">12.0",
@@ -44,7 +44,7 @@
 		"jsdoc": "^3.6.7",
 		"lodash": "^4.17.21",
 		"microbundle": "^0.13.0",
-		"prettier": "2.4.1",
+		"prettier": "^2.4.1",
 		"ts-jest": "^26.5.6",
 		"ts-loader": "^6.2",
 		"ts-node": "^8.10.2",

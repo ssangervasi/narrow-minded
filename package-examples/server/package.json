@@ -1,0 +1,19 @@
+{
+	"name": "narrow-minded-server",
+	"version": "0.1.0",
+	"description": "Example of using narrow-minded in a server package.",
+	"author": "Sebastian Sangervasi",
+	"license": "MIT",
+	"source": "index.ts",
+	"main": "./dist/narrow-minded-server.js",
+	"scripts": {
+		"build": "microbundle --target=node --format=cjs",
+		"watch": "microbundle watch --target=node --format=cjs",
+		"test": "npm run build && node ./dist/narrow-minded-server.js ./example.json"
+	},
+	"devDependencies": {
+		"narrow-minded": "../..",
+		"microbundle": "^0.14.2",
+		"typescript": "^4.6.2"
+	}
+}

@@ -1,21 +1,21 @@
+import fs from 'fs'
+
 import { narrow, Guard } from 'narrow-minded'
 
-const handleClick = () => {
-	console.log('Click')
+const main = () => {
+	const [inputPath] = process.argv.slice(-1)
+	const inputStr = fs.readFileSync(inputPath).toString()
 
-	const inputEl: HTMLTextAreaElement = document.querySelector('#input')!
-	const outputEl: HTMLPreElement = document.querySelector('#output')!
-
-	const parsed = parse(inputEl.value)
+	const parsed = parse(inputStr)
 
 	if (!narrow(['object'], parsed)) {
-		outputEl.innerText = 'Invalid JSON'
-		return
+		console.error('Invalid JSON')
+		process.exit(1)
 	}
 
 	const results = parsed.map(check)
 
-	outputEl.innerText = results.join('\n--\n')
+	console.log(results.join('\n--\n'))
 }
 
 interface Animal {
@@ -62,6 +62,4 @@ const check = (parsed: unknown): string => {
 	return 'Did not narrow.'
 }
 
-Object.assign(window, {
-	handleClick,
-})
+main()
