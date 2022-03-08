@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script src="/dist/nm-test-browser.modern.js"></script>
+    <style>
+      body {
+        display: flex;
+        flex-flow: column wrap;
+      }
+      button {
+        padding: 1rem;
+        font-size: 2rem;
+        font-weight: 500;
+      }
+      #input,
+      #output {
+        padding: 1rem;
+        font-weight: 500;
+        background-color: lightgrey;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button onclick="handleClick()">Click</button>
+    <textarea id="input" rows="20" cols="80">
+[
+  {
+    "content": "Hey there hi there ho there.",
+    "sentAt": -22089600000
+  },
+  {
+    "type": "animal",
+    "name": "horse",
+    "legs": 4
+  },
+  {
+    "type": "animal",
+    "legs": "Only type is checked, these fields are not.",
+    "name": null
+  },
+  [],
+  {}
+]
+    </textarea>
+    <pre id="output">
+// ...
+    </pre>
+  </body>
+</html>

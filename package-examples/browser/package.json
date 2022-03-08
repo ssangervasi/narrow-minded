@@ -1,0 +1,21 @@
+{
+  "name": "nm-test-browser",
+  "version": "0.1.0",
+  "description": "",
+  "source": "index.ts",
+  "exports": "./dist/nm-test-browser.modern.js",
+  "scripts": {
+    "start": "npm run build && npx serve",
+    "build": "microbundle -f modern",
+    "watch": "microbundle watch -f modern",
+    "test": "exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "narrow-minded": "../..",
+    "microbundle": "^0.14.2",
+    "serve": "^13.0.2",
+    "typescript": "^4.6.2"
+  }
+}
