@@ -295,3 +295,99 @@ describe('narrow conditional typing', () => {
 		}
 	})
 })
+
+describe('readme', () => {
+	// import { narrow } from 'narrow-minded'
+
+	test('simple example', () => {
+		interface Obj {
+			str: string
+		}
+
+		const handleObj = (obj: Obj) => obj
+
+		const untrustedString = JSON.stringify({ str: 'horse' })
+
+		// JSON is a common case, but any questionable value can be used.
+		const value: unknown = JSON.parse(untrustedString)
+
+		// This gives up type checking, breaks on non-object values,
+		// and doesn't narrow the type but instead relies on type assertion.
+		if (typeof (value as any).str === 'string') {
+			handleObj(value as any)
+		}
+
+		// Succinct, does not break on strange values, and uses type guards so that
+		// no assertions are necessary within the conditional block.
+		if (narrow({ str: 'string' }, value)) {
+			handleObj(value)
+		}
+	})
+
+	test('longer example', () => {
+		interface Obj {
+			str: string
+			arr: number[]
+		}
+
+		const handleObj = (obj: Obj) => obj
+
+		// Another contrived value.
+		const value = [
+			{
+				str: 'Only valid object',
+				arr: [1, 2, 3],
+			},
+			{
+				str: 'Almost correct, but not quite',
+				arr: ['one'],
+			},
+			3.14,
+			null,
+		][Math.round(Math.random() * 10) % 4]
+
+		// Safe at runtime, but still requires type assertions because TypeScript
+		// does not narrow when using the `in` keyword. Don't forget to use the right
+		// checks for arrays ;)
+		if (
+			typeof value === 'object' &&
+			value !== null &&
+			typeof (value as any).someStr === 'string' &&
+			Array.isArray((value as any).arr) &&
+			typeof (value as any).arr[0] === 'number'
+		) {
+			const obj: Obj = value as any
+			handleObj(obj)
+		}
+
+		// Safer, fits on one line, and infers the nested types!
+		if (narrow({ str: 'string', arr: ['number'] }, value)) {
+			handleObj(value)
+		}
+	})
+
+	test('arrays lol', () => {
+		expect(narrow(['string'], ['an', 'array'])).toEqual(true)
+		expect(narrow('object', ['an', 'array'])).toEqual(true)
+		expect(narrow({ length: 'number' }, ['an', 'array'])).toEqual(true)
+		expect(narrow({ length: 'number' }, { length: 2 })).toEqual(true)
+
+		expect(narrow(['string'], {})).toEqual(false)
+		expect(narrow(['string'], { length: 2 })).toEqual(false)
+		expect(narrow(['string'], { 0: 'an', 1: 'array', length: 2 })).toEqual(
+			false,
+		)
+	})
+
+	test('null', () => {
+		expect(narrow({ key: some('number', 'undefined') }, {})).toEqual(true)
+		expect(narrow({ key: some('number', 'undefined') }, { key: 10 })).toEqual(
+			true,
+		)
+
+		expect(narrow('object', null)).toEqual(true)
+		expect(narrow({}, { key: 'value' })).toEqual(true)
+
+		expect(narrow(some({}, 'undefined'), null)).toEqual(false)
+	})
+})

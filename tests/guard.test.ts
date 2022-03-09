@@ -206,3 +206,85 @@ describe('Doc Tests', () => {
 		}
 	})
 })
+
+describe('readme', () => {
+	// import { Guard } from 'narrow-minded'
+
+	// The class method `narrow` can be used to construct a guard that validates
+	// the primitive schema.
+	const MessageGuard = Guard.narrow({
+		type: 'string',
+		body: {},
+	})
+
+	// A guard can be constructed with a custom predicate function which allows
+	// for arbitrary interfaces and comparisons.
+	interface Ping {
+		type: 'ping'
+		body: {
+			sentAt: number
+		}
+	}
+	const PingGuard = new Guard(
+		(m): m is Ping =>
+			MessageGuard.satisfied(m) &&
+			m.type === 'ping' &&
+			narrow(
+				{
+					sentAt: 'number',
+				},
+				m.body,
+			),
+	)
+
+	// The guard's function is entirely custom, which means you can choose to sacrifice
+	// some safety to gain some performance. For example, this guard assumes the body
+	// has the correct schema without actually checking.
+	interface Pong {
+		type: 'pong'
+		body: {
+			sentAt: number
+			receivedAt: number
+		}
+	}
+	const PongGuard = new Guard(
+		(m): m is Ping => MessageGuard.satisfied(m) && m.type === 'pong',
+	)
+
+	it('says ping is ping', () => {
+		expect(
+			PingGuard.satisfied({
+				type: 'ping',
+				body: {
+					sentAt: 1234,
+				},
+			}),
+		).toBe(true)
+
+		expect(
+			PingGuard.satisfied({
+				type: 'ping',
+				body: {},
+			}),
+		).toBe(false)
+	})
+
+	it('says pong is pong', () => {
+		expect(
+			PongGuard.satisfied({
+				type: 'pong',
+				body: {},
+			}),
+		).toBe(true)
+
+		expect(
+			PongGuard.satisfied({
+				type: 'ping',
+				body: {
+					sentAt: 1234,
+					receivedAt: 2345,
+				},
+			}),
+		).toBe(false)
+	})
+})

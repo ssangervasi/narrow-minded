@@ -1,6 +1,6 @@
 {
 	"name": "narrow-minded",
-	"description": "narrow-minded",
+	"description": "Easy typeof validations with sophisticated TypeScript inference.",
 	"author": "Sebastian Sangervasi",
 	"license": "MIT",
 	"version": "0.1.0",
