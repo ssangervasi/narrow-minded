@@ -79,7 +79,7 @@ export class Guard<P> {
 	 * )
 	 * ```
 	 *
-	 * @param other - The or with a Narrower/NarrowerFunction which will
+	 * @param other - Another Guard or a Narrower/NarrowerFunction which will
 	 * be wrapped into a Guard automatically.
 	 * @return Guard
 	 */

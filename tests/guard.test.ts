@@ -1,4 +1,4 @@
-import { unknown, Guard } from '~/guard'
+import { unknown, Guard, Payload } from '~/guard'
 import { narrow, some } from '~/narrow'
 
 const num = Guard.narrow('number')
@@ -234,7 +234,8 @@ describe('readme', () => {
 					sentAt: 'number',
 				},
 				m.body,
-			),
+			) &&
+			m.body.sentAt > 0,
 	)
 
 	// The guard's function is entirely custom, which means you can choose to sacrifice
@@ -250,6 +251,18 @@ describe('readme', () => {
 	const PongGuard = new Guard(
 		(m): m is Ping => MessageGuard.satisfied(m) && m.type === 'pong',
 	)
+
+	it('satisfies', () => {
+		const goodValue: unknown = JSON.parse('{ "type": "message", "body": {} }')
+		if (MessageGuard.satisfied(goodValue)) {
+			console.log(goodValue.type) //=> "message"
+		}
+
+		const badValue: unknown = JSON.parse('{ "foo": "bar" }')
+		if (!MessageGuard.satisfied(badValue)) {
+			console.log('bad') //=> "bad"
+		}
+	})
 
 	it('says ping is ping', () => {
 		expect(
@@ -286,5 +299,22 @@ describe('readme', () => {
 				},
 			}),
 		).toBe(false)
+	})
+
+	it('works with payload', () => {
+		const payload: Payload<typeof PingGuard> = {
+			type: 'ping',
+			body: {
+				sentAt: 1234,
+			},
+		}
+		const _ping: Ping = payload
+
+		const _message: Payload<typeof MessageGuard> = {
+			type: 'message',
+			body: {
+				some: 'thing',
+			},
+		}
 	})
 })

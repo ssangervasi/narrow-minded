@@ -1,6 +1,6 @@
 # narrow-minded
 
-## Easy (but deep) `typeof` validation with sophisticated TypeScript inference
+## Easy `typeof` validations with sophisticated TypeScript inference
 
 This package exists to make type safety easy for unstructured data. This includes runtime access if you're only using JavaScript, but gets even nicer with TypeScript.
 
@@ -29,17 +29,19 @@ if (narrow({ str: 'string' }, value)) {
 }
 ```
 
-That's pretty excellent, but it becomes even better when working with nested objects and more interesting types:
+That's pretty excellent, but it becomes even better when working with nested objects and more interesting types. In the example below, let's say you want to pass `value` into `handleObj` but only if it has the correct structure.
 
 ```ts
+// Some interesting type:
 interface Obj {
   str: string
   arr: number[]
 }
 
+// Some code that expects that type:
 const handleObj = (obj: Obj) => { /*...*/ }
 
-// Another contrived value.
+// Some value with an unpredictable structure.
 const value = [
   {
     str: 'Only valid object',
@@ -52,21 +54,30 @@ const value = [
   3.14,
   null,
 ][Math.round(Math.random() * 10) % 4]
+```
 
-// Safe at runtime, but still requires type assertions because TypeScript
-// does not narrow when using the `in` keyword. Don't forget to use the right
-// checks for arrays ;)
+It is possible to check the value at runtime with a lot of `typeof` conditions. Checking nested properties becomes verbose, so often these will be omitted which may introduce bugs:
+
+```ts
+// We need to do a lot of type assertions because TypeScript does not narrow for us
+// when using the `in` keyword. Don't forget to use the right checks for arrays ;)
 if (
   typeof value === 'object' &&
   value !== null &&
-  typeof (value as any).someStr === 'string' &&
+  'str' in value &&
+  typeof (value as any).str === 'string' &&
+  'arr' in value &&
   Array.isArray((value as any).arr) &&
   typeof (value as any).arr[0] === 'number'
 ) {
   const obj: Obj = value as any
   handleObj(obj)
 }
+```
 
+Or you could use `narrow`:
+
+```ts
 // Safer, fits on one line, and infers the nested types!
 if (narrow({ str: 'string', arr: ['number'] }, value)) {
   handleObj(value)
@@ -158,22 +169,43 @@ narrow(some({}, 'undefined'), null) //=> false
 ```
 
 
-## Reusable type guards
+## Reusable narrowing with `Guard`
 
+When working with object that are frequently serialized, deserialized, and passed around an application, you may want to use the same narrowing schema repeatedly. The `Guard` class makes reuse easy.
 
 
 ```ts
-import { Guard, narrow } from 'narrow-minded'
+import { Guard } from 'narrow-minded'
 
-// The class method `narrow` can be used to construct a guard that validates
-// the primitive schema.
+// The class method `narrow` constructs a Guard that reuses the schema.
 const MessageGuard = Guard.narrow({
   type: 'string',
   body: {},
 })
+```
 
+Whenever you need to test this schema, call `.satisfied(value)` like so:
+
+```ts
+const goodValue: unknown = JSON.parse('{ "type": "message", "body": {} }')
+if (MessageGuard.satisfied(goodValue)) {
+  console.log(goodValue.type) //=> "message"
+}
+
+const badValue: unknown = JSON.parse('{ "foo": "bar" }')
+if (!MessageGuard.satisfied(badValue)) {
+  console.log('bad') //=> "bad"
+}
+```
+
+### Custom guards
+
+If you're familiar with writing type predicates, you can construct a Guard directly. The example below builds guards that have types that are more specific that primitive `typeof` narrowing can provide:
+
+```ts
 // A guard can be constructed with a custom predicate function which allows
-// for arbitrary interfaces and comparisons.
+// for arbitrary interfaces and comparisons. This guard ensures `sentAt` is
+// greater than zero, which would not be possible with primitive checks.
 interface Ping {
   type: 'ping'
   body: {
@@ -189,7 +221,8 @@ const PingGuard = new Guard(
         sentAt: 'number',
       },
       m.body,
-    ),
+    ) &&
+    m.body.sentAt > 0,
 )
 
 // The guard's function is entirely custom, which means you can choose to sacrifice
@@ -206,4 +239,22 @@ const PongGuard = new Guard(
   (m): m is Ping => MessageGuard.satisfied(m) && m.type === 'pong',
 )
 
+```
+
+### The type within the guard: `Payload`
+
+If you need to extract the type that a guard wraps, use the type-helper `Payload<typeof MyGuard>`:
+
+```ts
+import { Payload } from 'narrow-minded'
+
+const payload: Payload<typeof PingGuard> = {
+  type: 'ping',
+  body: {
+    sentAt: 1234,
+  },
+}
+
+// Types match.
+const ping: Ping = payload
 ```

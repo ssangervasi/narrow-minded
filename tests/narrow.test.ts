@@ -325,15 +325,19 @@ describe('readme', () => {
 	})
 
 	test('longer example', () => {
+		// Some interesting type:
 		interface Obj {
 			str: string
 			arr: number[]
 		}
 
-		const handleObj = (obj: Obj) => obj
+		// Some code that expects that type:
+		const handleObj = (obj: Obj) => {
+			/*...*/
+		}
 
-		// Another contrived value.
-		const value = [
+		// Some value with an unpredictable structure:
+		const value: unknown = [
 			{
 				str: 'Only valid object',
 				arr: [1, 2, 3],
@@ -346,13 +350,14 @@ describe('readme', () => {
 			null,
 		][Math.round(Math.random() * 10) % 4]
 
-		// Safe at runtime, but still requires type assertions because TypeScript
-		// does not narrow when using the `in` keyword. Don't forget to use the right
-		// checks for arrays ;)
+		// We need to do a lot of type assertions because TypeScript does not narrow for us
+		// when using the `in` keyword. Don't forget to use the right checks for arrays ;)
 		if (
 			typeof value === 'object' &&
 			value !== null &&
-			typeof (value as any).someStr === 'string' &&
+			'str' in value &&
+			typeof (value as any).str === 'string' &&
+			'arr' in value &&
 			Array.isArray((value as any).arr) &&
 			typeof (value as any).arr[0] === 'number'
 		) {
