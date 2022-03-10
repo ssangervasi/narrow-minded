@@ -2,22 +2,19 @@
   "name": "narrow-minded-browser",
   "version": "0.1.0",
   "description": "Example of using narrow-minded in a browser package.",
-	"author": "Sebastian Sangervasi",
-	"license": "MIT",
-
+  "author": "Sebastian Sangervasi",
+  "license": "MIT",
   "source": "index.ts",
   "exports": "./dist/narrow-minded-browser.modern.js",
-
   "scripts": {
     "start": "npm run build && npx serve",
     "build": "microbundle -f modern",
     "watch": "microbundle watch -f modern",
     "test": "exit 1"
   },
-	
   "devDependencies": {
-    "narrow-minded": "../..",
     "microbundle": "^0.14.2",
+    "narrow-minded": "../..",
     "serve": "^13.0.2",
     "typescript": "^4.6.2"
   }

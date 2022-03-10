@@ -12,8 +12,8 @@
 		"test": "npm run build && node ./dist/narrow-minded-server.js ./example.json"
 	},
 	"devDependencies": {
-		"narrow-minded": "../..",
 		"microbundle": "^0.14.2",
+		"narrow-minded": "../..",
 		"typescript": "^4.6.2"
 	}
 }

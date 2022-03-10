@@ -240,37 +240,7 @@ that is not null.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-// An array of mixed strings and numbers:
-narrow(['string', 'number'], [1, 'two']) //=> true
-narrow(['string', 'number'], [{}]) //=> false
-
-// Null:
-narrow('object', null) //=> true
-narrow({}, null) //=> false
-
-// A deep object:
-narrow({
-	n: 'number',
-	child: {
-		word: 'string'
-	},
-	things: [
-		['number'],
-		'boolean'
-	],
-}, {
-	n: 3.14,
-	child: {
-		word: 'Yes'
-	},
-	things: [
-		false,
-		[1, 2, 3],
-		true
-	]
-}) //=> true
-```</code></pre>
+        <pre class="prettyprint"><code>```// An array of mixed strings and numbers:narrow(['string', 'number'], [1, 'two']) //=> truenarrow(['string', 'number'], [{}]) //=> false// Null:narrow('object', null) //=> truenarrow({}, null) //=> false// A deep object:narrow({	n: 'number',	child: {		word: 'string'	},	things: [		['number'],		'boolean'	],}, {	n: 3.14,	child: {		word: 'Yes'	},	things: [		false,		[1, 2, 3],		true	]}) //=> true```</code></pre>
     
 
 
@@ -424,11 +394,7 @@ set of options instead of asserting the value is an actual array.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-if (unknown.and('string').satisfied('Great')) {
-	console.log('Great')
-}
-```</code></pre>
+        <pre class="prettyprint"><code>```if (unknown.and('string').satisfied('Great')) {	console.log('Great')}```</code></pre>
     
 
 
