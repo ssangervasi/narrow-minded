@@ -3,7 +3,7 @@
 	"description": "Easy typeof validations with sophisticated TypeScript inference.",
 	"author": "Sebastian Sangervasi",
 	"license": "MIT",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"keywords": [
 		"validate",
 		"narrow",
@@ -20,6 +20,10 @@
 	"main": "dist/index.js",
 	"exports": "./dist/index.modern.js",
 	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"src"
+	],
 	"engines": {
 		"node": ">12.0",
 		"npm": ">6.0"
