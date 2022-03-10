@@ -1,5 +1,13 @@
 # narrow-minded
 
+<a href="https://www.npmjs.com/package/narrow-minded">
+	<img alt="npm" src="https://img.shields.io/npm/v/narrow-minded">
+</a>
+
+<a href="https://www.harmless.dev/narrow-minded/global.html#narrow">
+	<img alt="docs" src="https://img.shields.io/badge/Docs-better--docs-informational">
+</a>
+
 ## Easy `typeof` validations with sophisticated TypeScript inference
 
 This package exists to make type safety easy for unstructured data. This includes runtime access if you're only using JavaScript, but gets even nicer with TypeScript.
@@ -24,7 +32,7 @@ import { narrow } from 'narrow-minded'
 
 // Succinct, does not break on strange values, and uses type guards so that
 // no assertions are necessary within the conditional block.
-if (narrow({ str: 'string' }, value)) {
+if (narrow({ someProp: 'string' }, value)) {
   handleObj(value)
 }
 ```
