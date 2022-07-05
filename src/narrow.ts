@@ -59,9 +59,21 @@ export type UnPrimitive<N> = /*
 	: N extends 'function'
 	? Function
 	: unknown
+
+/* eslint-disable @typescript-eslint/array-type */
+/**
+ * This attempts to infer a narrowed type based on a Narrow schema, which results in nice types
+ * within conditional blocks. If inference is not possible, the type remains `unknown`.
+ *
+ * An empty array as a schema is a special case: TypeScript wants to assume the contained type is
+ * `never` (the array is empty, so the contents have no type) but this is not useful in practice, so
+ * the content type is also replaced with `unknown`.
+ */
 export type UnNarrow<N> = /*
  */ N extends Primitive
 	? UnPrimitive<N>
+	: N extends Array<never>
+	? Array<unknown>
 	: N extends Array<infer N2>
 	? N extends NarrowerSome
 		? UnNarrow<N2>
@@ -69,6 +81,7 @@ export type UnNarrow<N> = /*
 	: N extends Record<keyof N, infer _N2>
 	? { [k in keyof N]: UnNarrow<N[k]> }
 	: unknown
+/* eslint-enable @typescript-eslint/array-type */
 
 /**
  * This function validates any value with `typeof` checks. Arrays and objects are traversed
@@ -172,6 +185,11 @@ const _narrow = <N extends Narrower>(n: N, u: unknown): boolean => {
 			return n.some(t => _narrow(t, u))
 		} else {
 			if (Array.isArray(u)) {
+				if (n.length === 0) {
+					// An empty schema array represents an array with unknown contents.
+					return true
+				}
+
 				return u.every(v => n.some(t => _narrow(t, v)))
 			} else {
 				return false

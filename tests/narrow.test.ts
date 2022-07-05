@@ -73,6 +73,23 @@ describe('narrow value checking', () => {
 				],
 			),
 		).toBe(true)
+
+		expect(
+			narrow(
+				[],
+				[
+					1,
+					'caw',
+					{},
+					{
+						bird: 'caw',
+					},
+					null,
+					undefined,
+				],
+			),
+		).toBe(true)
+		expect(narrow([], {})).toBe(false)
 	})
 
 	it('works with some()', () => {
@@ -145,6 +162,7 @@ describe('narrow value checking', () => {
 	})
 })
 
+// These tests are for verification of types at compile time.
 describe('narrow conditional typing', () => {
 	it('works on primitives', () => {
 		const p: unknown = 42
@@ -167,6 +185,11 @@ describe('narrow conditional typing', () => {
 		if (narrow(['string'], poa)) {
 			const a: string[] = poa
 			console.log(a)
+		}
+		if (narrow([], poa)) {
+			// `Array[unknown]` instead of `Array<never>`.
+			const u = poa
+			console.log(u)
 		}
 	})
 
@@ -296,9 +319,8 @@ describe('narrow conditional typing', () => {
 	})
 })
 
-describe('readme', () => {
-	// import { narrow } from 'narrow-minded'
-
+// Tests for snippets that are in the README.
+describe('README', () => {
 	test('simple example', () => {
 		interface Obj {
 			str: string
