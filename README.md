@@ -149,6 +149,14 @@ narrow(['string'], { length: 2, 0: 'an', 1: 'array' }) //=> false <-- oh good!
 
 ```
 
+An empty array is a valid schema. The value must be an array, but its contents will not be checked. The contents will be inferred as `unknown`.
+
+```ts
+narrow([], [1, 'two', null, undefined, { key: 'value' }]) //=> true
+
+narrow([], {}) //=> false
+```
+
 ### `some` (Optionals)
 Arrays can contain a mix of types. What if you want a single value that can be a variety of types? Use `some(schemaA, schemaB, ...)`.
 
@@ -176,6 +184,39 @@ narrow({}), null) //=> false
 narrow(some({}, 'undefined'), null) //=> false
 ```
 
+
+## Performance
+
+The time complexity of `narrow` scales with the size of the schema, not the size of the value. This gives you control over the performance of the checks. A deeply nested schema with a lot of keys will take slightly longer than a shallow one, but calling a simple schema on `window` will be fast.
+
+**Arrays are an exception**. In order to check that the array satisfies a type, all of its elements must satisfy one (or more) of the internal types. This means that the time complexity will scale with the size of the value.
+
+If this is a concern, you can use an empty array schema to avoid checking the contents. Individual elements can be narrowed as needed. An example:
+
+```ts
+const hugeInput = [
+	{ data: 1 },
+	{ data: 2 },
+	// ...
+	{ data: 1_000_000 }
+]
+
+// SLOW: Will narrow a million objects:
+if (narrow([{ data: 'number' }], hugeInput)) {
+	// All items are checked, even if we don't need them...
+}
+
+// FAST: Will just confirm the input is an array:
+if (narrow([], hugeInput)) {
+	// Type is unknown:
+	const item = hugeInput[0]
+	if (narrow({ data: 'number' }, item)) {
+		// Use the item...
+	}
+}
+
+
+```
 
 ## Reusable narrowing with `Guard`
 
@@ -244,7 +285,7 @@ interface Pong {
   }
 }
 const PongGuard = new Guard(
-  (m): m is Ping => MessageGuard.satisfied(m) && m.type === 'pong',
+  (m): m is Pong => MessageGuard.satisfied(m) && m.type === 'pong',
 )
 
 ```

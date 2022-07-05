@@ -49,7 +49,7 @@
                     href="index.html"
                     class="link"
                 >
-                    API Documentation
+                    Documentation
                 </a>
                 
                 
@@ -73,7 +73,7 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Title</p>
+                    <p></p>
                     <h1>Global</h1>
                 </header>
                 
@@ -227,7 +227,7 @@ that is not null.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line56">line 56</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line57">line 57</a>
             </span>
         </p>
     
@@ -240,7 +240,37 @@ that is not null.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```// An array of mixed strings and numbers:narrow(['string', 'number'], [1, 'two']) //=> truenarrow(['string', 'number'], [{}]) //=> false// Null:narrow('object', null) //=> truenarrow({}, null) //=> false// A deep object:narrow({	n: 'number',	child: {		word: 'string'	},	things: [		['number'],		'boolean'	],}, {	n: 3.14,	child: {		word: 'Yes'	},	things: [		false,		[1, 2, 3],		true	]}) //=> true```</code></pre>
+        <pre class="prettyprint"><code>```
+// An array of mixed strings and numbers:
+narrow(['string', 'number'], [1, 'two']) //=> true
+narrow(['string', 'number'], [{}]) //=> false
+
+// Null:
+narrow('object', null) //=> true
+narrow({}, null) //=> false
+
+// A deep object:
+narrow({
+	n: 'number',
+	child: {
+		word: 'string'
+	},
+	things: [
+		['number'],
+		'boolean'
+	],
+}, {
+	n: 3.14,
+	child: {
+		word: 'Yes'
+	},
+	things: [
+		false,
+		[1, 2, 3],
+		true
+	]
+}) //=> true
+```</code></pre>
     
 
 
@@ -308,7 +338,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line66">line 66</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line67">line 67</a>
             </span>
         </p>
     
@@ -381,7 +411,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line81">line 81</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line82">line 82</a>
             </span>
         </p>
     
@@ -394,7 +424,11 @@ set of options instead of asserting the value is an actual array.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```if (unknown.and('string').satisfied('Great')) {	console.log('Great')}```</code></pre>
+        <pre class="prettyprint"><code>```
+if (unknown.and('string').satisfied('Great')) {
+	console.log('Great')
+}
+```</code></pre>
     
 
 
@@ -406,6 +440,221 @@ set of options instead of asserting the value is an actual array.</p>
 
     
 
+    
+        <div class='vertical-section'>
+            <h1>Type Definitions</h1>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<code class="param-type"><a href="global.html#Primitive">Primitive</a></code>
+|
+
+<code class="param-type">NarrowerArr</code>
+|
+
+<code class="param-type">NarrowerObj</code>
+|
+
+<code class="param-type">NarrowerSome</code>
+
+
+    </span>
+
+<h4 class="name" id="Narrower">
+    <a class="href-link" href="#Narrower">#</a>
+    
+    <span class="code-name">
+        Narrower
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>This is the type that specifies a narrowed structure. The simplest form is a Primitive string,
+which will validate using a <code>typeof</code> comparison. Deeper structures can be defined using objects
+and arrays that will be validated recursively.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="narrow.ts.html" class="button">View Source</a>
+            <span>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line119">line 119</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>```
+// An array of mixed strings and numbers:
+['string', 'number']
+
+// A deep object:
+{
+	n: 'number',
+	child: {
+		word: 'string'
+	},
+	things: [
+		['number'],
+		'boolean'
+	],
+}
+```</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<code class="param-type">'string'</code>
+|
+
+<code class="param-type">'number'</code>
+|
+
+<code class="param-type">'bigint'</code>
+|
+
+<code class="param-type">'boolean'</code>
+|
+
+<code class="param-type">'symbol'</code>
+|
+
+<code class="param-type">'undefined'</code>
+|
+
+<code class="param-type">'object'</code>
+|
+
+<code class="param-type">'function'</code>
+
+
+    </span>
+
+<h4 class="name" id="Primitive">
+    <a class="href-link" href="#Primitive">#</a>
+    
+    <span class="code-name">
+        Primitive
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Includes all values that can be returned by a <code>typeof</code> expression.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="narrow.ts.html" class="button">View Source</a>
+            <span>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line113">line 113</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
     
 
     
@@ -420,9 +669,9 @@ set of options instead of asserting the value is an actual array.</p>
             
             <footer class="footer">
                 <div class="content has-text-centered">
-                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
                     <p class="sidebar-created-by">
-                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
                         <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
                     </p>
                 </div>
@@ -435,6 +684,7 @@ set of options instead of asserting the value is an actual array.</p>
 <script src="scripts/app.min.js"></script>
 <script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
+
 
 </body>
 </html>

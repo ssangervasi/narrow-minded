@@ -249,7 +249,7 @@ describe('readme', () => {
 		}
 	}
 	const PongGuard = new Guard(
-		(m): m is Ping => MessageGuard.satisfied(m) && m.type === 'pong',
+		(m): m is Pong => MessageGuard.satisfied(m) && m.type === 'pong',
 	)
 
 	it('satisfies', () => {
