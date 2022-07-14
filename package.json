@@ -3,7 +3,7 @@
 	"description": "Easy typeof validations with sophisticated TypeScript inference.",
 	"author": "Sebastian Sangervasi",
 	"license": "MIT",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"keywords": [
 		"validate",
 		"narrow",
@@ -18,7 +18,8 @@
 	},
 	"source": "src/index.ts",
 	"main": "dist/index.js",
-	"exports": "./dist/index.modern.js",
+	"module": "./dist/index.module.mjs",
+	"exports": "./dist/index.modern.mjs",
 	"types": "dist/index.d.ts",
 	"files": [
 		"dist",
@@ -29,8 +30,8 @@
 		"npm": ">6.0"
 	},
 	"scripts": {
-		"build": "rm -rf dist/* && npm run build-node && npm run build-modern && npm run docs",
-		"build-modern": "microbundle --target=node --format=modern",
+		"build": "rm -rf dist/* && npm run build-web && npm run build-node && npm run docs",
+		"build-web": "microbundle --target=web --format=modern,esm",
 		"build-node": "microbundle --target=node --format=cjs",
 		"docs": "jsdoc -c jsdoc.json",
 		"lint": "eslint --fix --cache src/**/*.ts tests/**/*.ts",
