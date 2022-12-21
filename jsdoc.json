@@ -12,5 +12,8 @@
 		"recurse": true,
 		"template": "node_modules/better-docs",
 		"readme": "./README.md"
+	},
+	"templates": {
+		"search": true
 	}
 }

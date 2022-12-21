@@ -11,11 +11,11 @@ export class Guard<P> {
 	 * Creates a new guard that uses a `narrow` function.
 	 * A little shortcut for `new Guard(narrow(...))`.
 	 * @example
-	 * ```
+	 *
 	 * import { Guard } from 'narrow-minded'
 	 * const myGuard = Guard.narrow(['string', 'number'])
 	 * myGuard.satisfied(['horse', 42]) // => true
-	 * ```
+	 *
 	 * @param n Narrower
 	 * @returns Guard
 	 */
@@ -33,7 +33,7 @@ export class Guard<P> {
 	 * Runs the guard's narrowing function to validate the unknown value's type.
 	 * Operates as a type predicate so conditional blocks infer this structure.
 	 * @example
-	 * ```
+	 *
 	 * const myGuard = Guard.narrow({
 	 * 	name: 'string',
 	 * 	values: ['number'],
@@ -50,7 +50,7 @@ export class Guard<P> {
 	 * 	console.log('Bad ')
 	 * 	// => 'Bad'
 	 * }
-	 * ```
+	 *
 	 * @param u The unknown value.
 	 * @returns A type predicate that `u` satisfies this guard.
 	 */
@@ -72,12 +72,10 @@ export class Guard<P> {
 	 * Creates a new guard that will satisfy the constraints of `this` AND `other`.
 	 * Useful for combining primitive narrows with more complex type checking.
 	 * @example
-	 * ```
 	 * const myGuard = Guard.narrow({ type: 'string' }).and(
 	 * 	(u: unknown): u is { type: 'this' | 'that' } =>
 	 * 		['this', 'that'].includes((u as any).type),
 	 * )
-	 * ```
 	 *
 	 * @param other - Another Guard or a Narrower/NarrowerFunction which will
 	 * be wrapped into a Guard automatically.
@@ -100,10 +98,8 @@ export class Guard<P> {
 /**
  * A singleton that can be used to build `and` chains.
  * @example
- * ```
  * if (unknown.and('string').satisfied('Great')) {
  * 	console.log('Great')
  * }
- * ```
  */
 export const unknown = new Guard<unknown>((_): _ is unknown => true)

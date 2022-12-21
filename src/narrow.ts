@@ -21,8 +21,8 @@ export interface NarrowerObj {
  * This is the type that specifies a narrowed structure. The simplest form is a Primitive string,
  * which will validate using a `typeof` comparison. Deeper structures can be defined using objects
  * and arrays that will be validated recursively.
+ *
  * @example
- * ```
  * // An array of mixed strings and numbers:
  * ['string', 'number']
  *
@@ -37,7 +37,6 @@ export interface NarrowerObj {
  * 		'boolean'
  * 	],
  * }
- * ```
  */
 export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 
@@ -102,7 +101,6 @@ export type UnNarrow<N> = /*
  * that is not null.
  *
  * @example
- * ```
  * // An array of mixed strings and numbers:
  * narrow(['string', 'number'], [1, 'two']) //=> true
  * narrow(['string', 'number'], [{}]) //=> false
@@ -132,7 +130,7 @@ export type UnNarrow<N> = /*
  * 		true
  * 	]
  * }) //=> true
- * ```
+ *
  * @param n The Narrower schema.
  * @param u The value of unknown type to validate.
  * @returns A type predicate that `u` satisfies `n`.

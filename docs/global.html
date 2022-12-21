@@ -64,6 +64,10 @@
             id="sidebarNav"
         >
             
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
             <nav>
                 
                     <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
@@ -227,7 +231,7 @@ that is not null.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line57">line 57</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line56">line 56</a>
             </span>
         </p>
     
@@ -240,8 +244,7 @@ that is not null.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-// An array of mixed strings and numbers:
+        <pre class="prettyprint"><code>// An array of mixed strings and numbers:
 narrow(['string', 'number'], [1, 'two']) //=> true
 narrow(['string', 'number'], [{}]) //=> false
 
@@ -269,8 +272,7 @@ narrow({
 		[1, 2, 3],
 		true
 	]
-}) //=> true
-```</code></pre>
+}) //=> true</code></pre>
     
 
 
@@ -338,7 +340,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line67">line 67</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line66">line 66</a>
             </span>
         </p>
     
@@ -411,7 +413,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line82">line 82</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line80">line 80</a>
             </span>
         </p>
     
@@ -424,11 +426,9 @@ set of options instead of asserting the value is an actual array.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-if (unknown.and('string').satisfied('Great')) {
+        <pre class="prettyprint"><code>if (unknown.and('string').satisfied('Great')) {
 	console.log('Great')
-}
-```</code></pre>
+}</code></pre>
     
 
 
@@ -521,7 +521,7 @@ and arrays that will be validated recursively.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line119">line 119</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line118">line 118</a>
             </span>
         </p>
     
@@ -534,8 +534,7 @@ and arrays that will be validated recursively.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-// An array of mixed strings and numbers:
+        <pre class="prettyprint"><code>// An array of mixed strings and numbers:
 ['string', 'number']
 
 // A deep object:
@@ -548,8 +547,7 @@ and arrays that will be validated recursively.</p>
 		['number'],
 		'boolean'
 	],
-}
-```</code></pre>
+}</code></pre>
     
 
 
@@ -641,7 +639,7 @@ and arrays that will be validated recursively.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line113">line 113</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line112">line 112</a>
             </span>
         </p>
     
@@ -684,6 +682,8 @@ and arrays that will be validated recursively.</p>
 <script src="scripts/app.min.js"></script>
 <script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
 
 
 </body>

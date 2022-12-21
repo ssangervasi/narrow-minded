@@ -64,6 +64,10 @@
             id="sidebarNav"
         >
             
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
             <nav>
                 
                     <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
@@ -345,7 +349,7 @@ A little shortcut for <code>new Guard(narrow(...))</code>.</p>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line101">line 101</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line99">line 99</a>
             </span>
         </p>
     
@@ -391,11 +395,9 @@ A little shortcut for <code>new Guard(narrow(...))</code>.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-import { Guard } from 'narrow-minded'
+        <pre class="prettyprint"><code>import { Guard } from 'narrow-minded'
 const myGuard = Guard.narrow(['string', 'number'])
-myGuard.satisfied(['horse', 42]) // => true
-```</code></pre>
+myGuard.satisfied(['horse', 42]) // => true</code></pre>
     
 
 
@@ -518,7 +520,7 @@ be wrapped into a Guard automatically.</p></td>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line153">line 153</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line149">line 149</a>
             </span>
         </p>
     
@@ -564,12 +566,10 @@ be wrapped into a Guard automatically.</p></td>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-const myGuard = Guard.narrow({ type: 'string' }).and(
+        <pre class="prettyprint"><code>const myGuard = Guard.narrow({ type: 'string' }).and(
 	(u: unknown): u is { type: 'this' | 'that' } =>
 		['this', 'that'].includes((u as any).type),
-)
-```</code></pre>
+)</code></pre>
     
 
 
@@ -691,7 +691,7 @@ defining objects that satisfy this guard using type inference.</p>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line136">line 136</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line134">line 134</a>
             </span>
         </p>
     
@@ -852,7 +852,7 @@ Operates as a type predicate so conditional blocks infer this structure.</p>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line128">line 128</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line126">line 126</a>
             </span>
         </p>
     
@@ -898,8 +898,7 @@ Operates as a type predicate so conditional blocks infer this structure.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>```
-const myGuard = Guard.narrow({
+        <pre class="prettyprint"><code>const myGuard = Guard.narrow({
 	name: 'string',
 	values: ['number'],
 })
@@ -914,8 +913,7 @@ const bad: unknown = { name: 42, values: 'Nope' }
 if (!myGuard.satisfied(bad)) {
 	console.log('Bad ')
 	// => 'Bad'
-}
-```</code></pre>
+}</code></pre>
     
 
 
@@ -954,6 +952,8 @@ if (!myGuard.satisfied(bad)) {
 <script src="scripts/app.min.js"></script>
 <script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
 
 
 </body>

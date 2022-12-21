@@ -66,6 +66,10 @@
             id="sidebarNav"
         >
             
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
             <nav>
                 
                     <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
@@ -108,8 +112,8 @@ export interface NarrowerObj {
  * This is the type that specifies a narrowed structure. The simplest form is a Primitive string,
  * which will validate using a `typeof` comparison. Deeper structures can be defined using objects
  * and arrays that will be validated recursively.
+ *
  * @example
- * ```
  * // An array of mixed strings and numbers:
  * ['string', 'number']
  *
@@ -124,7 +128,6 @@ export interface NarrowerObj {
  * 		'boolean'
  * 	],
  * }
- * ```
  */
 export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 
@@ -189,7 +192,6 @@ export type UnNarrow&lt;N> = /*
  * that is not null.
  *
  * @example
- * ```
  * // An array of mixed strings and numbers:
  * narrow(['string', 'number'], [1, 'two']) //=> true
  * narrow(['string', 'number'], [{}]) //=> false
@@ -219,7 +221,7 @@ export type UnNarrow&lt;N> = /*
  * 		true
  * 	]
  * }) //=> true
- * ```
+ *
  * @param n The Narrower schema.
  * @param u The value of unknown type to validate.
  * @returns A type predicate that `u` satisfies `n`.
@@ -318,6 +320,8 @@ const _narrow = &lt;N extends Narrower>(n: N, u: unknown): boolean => {
 <script src="scripts/app.min.js"></script>
 <script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
 
 
 </body>

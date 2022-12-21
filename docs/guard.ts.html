@@ -66,6 +66,10 @@
             id="sidebarNav"
         >
             
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
             <nav>
                 
                     <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
@@ -98,11 +102,11 @@ export class Guard&lt;P> {
 	 * Creates a new guard that uses a `narrow` function.
 	 * A little shortcut for `new Guard(narrow(...))`.
 	 * @example
-	 * ```
+	 *
 	 * import { Guard } from 'narrow-minded'
 	 * const myGuard = Guard.narrow(['string', 'number'])
 	 * myGuard.satisfied(['horse', 42]) // => true
-	 * ```
+	 *
 	 * @param n Narrower
 	 * @returns Guard
 	 */
@@ -120,7 +124,7 @@ export class Guard&lt;P> {
 	 * Runs the guard's narrowing function to validate the unknown value's type.
 	 * Operates as a type predicate so conditional blocks infer this structure.
 	 * @example
-	 * ```
+	 *
 	 * const myGuard = Guard.narrow({
 	 * 	name: 'string',
 	 * 	values: ['number'],
@@ -137,7 +141,7 @@ export class Guard&lt;P> {
 	 * 	console.log('Bad ')
 	 * 	// => 'Bad'
 	 * }
-	 * ```
+	 *
 	 * @param u The unknown value.
 	 * @returns A type predicate that `u` satisfies this guard.
 	 */
@@ -159,12 +163,10 @@ export class Guard&lt;P> {
 	 * Creates a new guard that will satisfy the constraints of `this` AND `other`.
 	 * Useful for combining primitive narrows with more complex type checking.
 	 * @example
-	 * ```
 	 * const myGuard = Guard.narrow({ type: 'string' }).and(
 	 * 	(u: unknown): u is { type: 'this' | 'that' } =>
 	 * 		['this', 'that'].includes((u as any).type),
 	 * )
-	 * ```
 	 *
 	 * @param other - Another Guard or a Narrower/NarrowerFunction which will
 	 * be wrapped into a Guard automatically.
@@ -187,11 +189,9 @@ export class Guard&lt;P> {
 /**
  * A singleton that can be used to build `and` chains.
  * @example
- * ```
  * if (unknown.and('string').satisfied('Great')) {
  * 	console.log('Great')
  * }
- * ```
  */
 export const unknown = new Guard&lt;unknown>((_): _ is unknown => true)
 </code></pre>
@@ -220,6 +220,8 @@ export const unknown = new Guard&lt;unknown>((_): _ is unknown => true)
 <script src="scripts/app.min.js"></script>
 <script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
 
 
 </body>
