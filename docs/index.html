@@ -70,7 +70,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#satisfier">satisfier</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
                 
             </nav>
         </div>
@@ -271,8 +271,27 @@ if (narrow([], hugeInput)) {
 
 
 </code></pre>
+<h2>Reusable narrowing with <code>satisfier</code></h2>
+<p>Using <code>narrow</code> is convenient for one-off checks, but for repeating the schema would be annoying.
+Wrap your schema in a <code>satisfier</code> to get a closure that can be used for multiple values:</p>
+<pre class="prettyprint source lang-ts"><code>import { satisfier } from 'narrow-minded'
+
+// Define the schema once:
+const satisfied = satisfier({ someProp: 'string' })
+// And reuse it:
+if (satisfied(value1) && satisfied(value2)) {
+	// ...
+}
+
+// Instead of repeating the schema:
+if (narrow({ someProp: 'string' }, value1) && narrow({ someProp: 'string' }, value2)) {
+	// ...
+}
+</code></pre>
 <h2>Reusable narrowing with <code>Guard</code></h2>
-<p>When working with object that are frequently serialized, deserialized, and passed around an application, you may want to use the same narrowing schema repeatedly. The <code>Guard</code> class makes reuse easy.</p>
+<p>When working with object that are frequently serialized, deserialized, and passed around an
+application, you may want to use the same narrowing schema repeatedly. The <code>Guard</code> class makes reuse
+easy and provides more customization options than <code>satisfier</code>:</p>
 <pre class="prettyprint source lang-ts"><code>import { Guard } from 'narrow-minded'
 
 // The class method `narrow` constructs a Guard that reuses the schema.

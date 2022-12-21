@@ -1,6 +1,13 @@
-import { unknown, Guard, Payload } from '~/guard'
+import { unknown, Guard, Payload, satisfier } from '~/guard'
 import { narrow, some } from '~/narrow'
 
+const deepSatisfied = satisfier({
+	n: 'number',
+	child: {
+		word: 'string',
+	},
+	things: [some(['number'], 'boolean')],
+})
 const num = Guard.narrow('number')
 const deep = Guard.narrow({
 	n: 'number',
@@ -23,6 +30,43 @@ const freeform = new Guard(
 		)
 	},
 )
+
+describe('satisfied', () => {
+	it('works on a deep object', () => {
+		expect(
+			deepSatisfied({
+				n: 10,
+				child: {
+					word: 'up',
+				},
+				things: [[1, 2, 3], false, true],
+			}),
+		).toBe(true)
+
+		expect(deepSatisfied(-10.5)).toBe(false)
+	})
+
+	// These tests are for verification of types at compile time.
+	it('applies conditional typing', () => {
+		const ob: unknown = {
+			n: 10,
+			child: {
+				word: 'up',
+			},
+			things: [[1, 2, 3], false, true],
+		}
+		if (deepSatisfied(ob)) {
+			const obis: {
+				n: number
+				child: {
+					word: string
+				}
+				things: Array<number[] | boolean>
+			} = ob
+			console.log(obis)
+		}
+	})
+})
 
 describe('Guard#satisfied', () => {
 	it('works on primitive', () => {

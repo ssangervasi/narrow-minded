@@ -218,9 +218,32 @@ if (narrow([], hugeInput)) {
 
 ```
 
+## Reusable narrowing with `satisfier`
+
+Using `narrow` is convenient for one-off checks, but for repeating the schema would be annoying.
+Wrap your schema in a `satisfier` to get a closure that can be used for multiple values:
+
+```ts
+import { satisfier } from 'narrow-minded'
+
+// Define the schema once:
+const satisfied = satisfier({ someProp: 'string' })
+// And reuse it:
+if (satisfied(value1) && satisfied(value2)) {
+	// ...
+}
+
+// Instead of repeating the schema:
+if (narrow({ someProp: 'string' }, value1) && narrow({ someProp: 'string' }, value2)) {
+	// ...
+}
+```
+
 ## Reusable narrowing with `Guard`
 
-When working with object that are frequently serialized, deserialized, and passed around an application, you may want to use the same narrowing schema repeatedly. The `Guard` class makes reuse easy.
+When working with object that are frequently serialized, deserialized, and passed around an
+application, you may want to use the same narrowing schema repeatedly. The `Guard` class makes reuse
+easy and provides more customization options than `satisfier`:
 
 
 ```ts
