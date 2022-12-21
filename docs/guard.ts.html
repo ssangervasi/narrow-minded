@@ -72,7 +72,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#satisfier">satisfier</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
                 
             </nav>
         </div>
@@ -90,6 +90,20 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import { narrow, Narrower, UnNarrow } from './narrow'
+
+/**
+ * Creates a function from a narrower schema that can be reused to narrow objects.
+ * This simple closure can be used when a whole Guard instance would be too much.
+ *
+ * @example
+ * import { satisfier } from 'narrow-minded'
+ * const satisfies = satisfier(['string', 'number'])
+ * satisfies(['horse', 42]) // => true
+ */
+export const satisfier =
+	&lt;N extends Narrower>(n: N) =>
+	(u: unknown): u is UnNarrow&lt;N> =>
+		narrow(n, u)
 
 export type NarrowingFunction&lt;P> = (u: unknown) => u is P
 export type Payload&lt;G> = G extends Guard&lt;infer P> ? P : unknown

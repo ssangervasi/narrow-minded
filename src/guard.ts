@@ -1,5 +1,19 @@
 import { narrow, Narrower, UnNarrow } from './narrow'
 
+/**
+ * Creates a function from a narrower schema that can be reused to narrow objects.
+ * This simple closure can be used when a whole Guard instance would be too much.
+ *
+ * @example
+ * import { satisfier } from 'narrow-minded'
+ * const satisfies = satisfier(['string', 'number'])
+ * satisfies(['horse', 42]) // => true
+ */
+export const satisfier =
+	<N extends Narrower>(n: N) =>
+	(u: unknown): u is UnNarrow<N> =>
+		narrow(n, u)
+
 export type NarrowingFunction<P> = (u: unknown) => u is P
 export type Payload<G> = G extends Guard<infer P> ? P : unknown
 
