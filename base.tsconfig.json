@@ -1,25 +1,7 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"~/*": [
-				"./src/*"
-			]
-		},
-		// Syntax
-		"lib": [
-			"dom",
-			"dom.iterable",
-			"esnext"
-		],
-		// Output
-		"outDir": "dist",
-		// General
+		// Type Checking
 		"allowJs": true,
-		"allowSyntheticDefaultImports": true,
-		"declaration": true,
-		"declarationMap": true,
-		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"incremental": true,
 		"inlineSourceMap": true,
@@ -33,10 +15,24 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"strictNullChecks": true,
+
+		// Env
+		"lib": ["dom", "dom.iterable", "esnext"],
 		"target": "ES6",
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+
+		// Modules
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./src/*"]
+		},
+
+		// Emit
+		"declaration": true,
+		"declarationMap": true,
+		"outDir": "dist"
 	},
-	"include": [
-		"src"
-	]
+	"include": ["src"]
 }
