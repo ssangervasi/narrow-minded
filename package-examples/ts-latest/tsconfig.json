@@ -1,0 +1,32 @@
+{
+	"compilerOptions": {
+		// Type Checking
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"skipLibCheck": true,
+		"strict": true,
+
+		// Env
+		"target": "esnext",
+		"lib": ["esnext"],
+
+		// Modules
+		"module": "esnext",
+		"moduleResolution": "nodenext",
+
+		// Emit
+		"incremental": true,
+		"declaration": true,
+		"declarationMap": true,
+
+		"outDir": "dist"
+	},
+	"include": ["index.ts"]
+}
