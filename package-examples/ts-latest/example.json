@@ -1,0 +1,18 @@
+[
+  {
+    "content": "Hey there hi there ho there.",
+    "sentAt": -22089600000
+  },
+  {
+    "type": "animal",
+    "name": "horse",
+    "legs": 4
+  },
+  {
+    "type": "animal",
+    "legs": "Only type is checked, these fields are not.",
+    "name": null
+  },
+  [],
+  {}
+]

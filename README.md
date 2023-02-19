@@ -8,6 +8,10 @@
 	<img alt="docs" src="https://img.shields.io/badge/Docs-better--docs-informational">
 </a>
 
+<a href="https://github.com/ssangervasi/narrow-minded/actions?query=branch%3Amain+">
+	<img alt="test status" src="https://github.com/ssangervasi/narrow-minded/actions/workflows/tests.yaml/badge.svg">
+</a>
+
 ## Easy `typeof` validations with sophisticated TypeScript inference
 
 This package exists to make type safety easy for unstructured data. This includes runtime access if you're only using JavaScript, but gets even nicer with TypeScript.

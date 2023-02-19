@@ -1,0 +1,19 @@
+{
+	"name": "narrow-minded-ts-latest",
+	"version": "0.1.0",
+	"description": "Example of using narrow-minded with latest TypeScript",
+	"author": "Sebastian Sangervasi",
+	"license": "MIT",
+	"source": "index.ts",
+	"module": "./dist/index.js",
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"build-debug": "tsc --traceResolution",
+		"test": "npm run build && node ./dist/index.js ./example.json"
+	},
+	"devDependencies": {
+		"narrow-minded": "../..",
+		"typescript": "^4.9.4"
+	}
+}
