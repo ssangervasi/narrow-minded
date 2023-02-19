@@ -44,6 +44,7 @@
 		"jest-watch": "jest --watch --runTestsByPath",
 		"test": "jest tests/*",
 		"test-watch": "jest --watch tests/*",
+		"test-packages": "./bin/test-packages",
 		"watch": "tsc-watch"
 	},
 	"devDependencies": {

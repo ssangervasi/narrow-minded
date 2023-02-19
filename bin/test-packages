@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# set -x
+set -e
+
+ls -1 ./package-examples | while read PACKAGE; do
+	echo "
+---------------------------------
+  "./package-examples/$PACKAGE"
+---------------------------------
+"
+	pushd "./package-examples/$PACKAGE"
+	npm install
+	npm run test
+	popd
+done
