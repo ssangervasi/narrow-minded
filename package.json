@@ -3,7 +3,7 @@
 	"description": "Easy typeof validations with sophisticated TypeScript inference.",
 	"author": "Sebastian Sangervasi",
 	"license": "MIT",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"keywords": [
 		"validate",
 		"narrow",

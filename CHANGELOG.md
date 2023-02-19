@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [1.2.1] - 2023-02-18
+
+### Fixed
+- Support for node16 module resolution with TSC build. [#1](https://github.com/ssangervasi/narrow-minded/issues/1)
+
+
 ## [1.2.0] - 2022-12-21
 ### Added
 - `satisfier` for simple closure guards. [README](/README.md#reusable-narrowing-with-satisfier)
