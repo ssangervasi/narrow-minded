@@ -30,7 +30,7 @@ export const makeSubnodes = (node: TraversalNode): TraversalNode[] => {
 		return []
 	}
 
-	return Object.values(value).map(([childProperty, childValue]) => ({
+	return Object.entries(value).map(([childProperty, childValue]) => ({
 		property: childProperty,
 		value: childValue,
 		level: level + 1,
