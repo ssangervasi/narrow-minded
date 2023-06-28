@@ -14,6 +14,20 @@
 		"readme": "./README.md"
 	},
 	"templates": {
-		"search": true
+		"search": true,
+		"better-docs": {
+			"title": "narrow-minded",
+			"name": "narrow-minded",
+			"navLinks": [
+				{
+					"label": "Repository",
+					"href": "https://github.com/ssangervasi/narrow-minded"
+				},
+				{
+					"label": "harmless.dev",
+					"href": "https://www.harmless.dev"
+				}
+			]
+		}
 	}
 }

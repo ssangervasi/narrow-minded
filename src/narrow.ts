@@ -150,6 +150,12 @@ export type NarrowerSome = {
 /**
  * Decorates a narrower array to indicate narrowing should use the array as a
  * set of options instead of asserting the value is an actual array.
+ *
+ * @example
+ * narrow(some('number'), 1) //=> true
+ * narrow({ optional: some('string', 'undefined') }), { optional: 'yep' }) //=> true
+ * narrow({ optional: some('string', 'undefined') }), {}) //=> true
+ *
  * @param opts The Narrower types that the value must be one of.
  * @returns An array with the SOME symbol set to true.
  */
