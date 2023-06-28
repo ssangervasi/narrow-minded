@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> Global</title>
+  <title>narrow-minded Global</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -40,6 +40,10 @@
         </a>
         <div class="logo">
             
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">narrow-minded</h1>
+                </a>
             
         </div>
         <div class="menu">
@@ -52,6 +56,22 @@
                     Documentation
                 </a>
                 
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/ssangervasi/narrow-minded"
+                        >
+                            Repository
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.harmless.dev"
+                        >
+                            harmless.dev
+                        </a>
+                    
                 
                 
             </div>
@@ -244,35 +264,7 @@ that is not null.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>// An array of mixed strings and numbers:
-narrow(['string', 'number'], [1, 'two']) //=> true
-narrow(['string', 'number'], [{}]) //=> false
-
-// Null:
-narrow('object', null) //=> true
-narrow({}, null) //=> false
-
-// A deep object:
-narrow({
-	n: 'number',
-	child: {
-		word: 'string'
-	},
-	things: [
-		['number'],
-		'boolean'
-	],
-}, {
-	n: 3.14,
-	child: {
-		word: 'Yes'
-	},
-	things: [
-		false,
-		[1, 2, 3],
-		true
-	]
-}) //=> true</code></pre>
+        <pre class="prettyprint"><code>// An array of mixed strings and numbers:narrow(['string', 'number'], [1, 'two']) //=> truenarrow(['string', 'number'], [{}]) //=> false// Null:narrow('object', null) //=> truenarrow({}, null) //=> false// A deep object:narrow({	n: 'number',	child: {		word: 'string'	},	things: [		['number'],		'boolean'	],}, {	n: 3.14,	child: {		word: 'Yes'	},	things: [		false,		[1, 2, 3],		true	]}) //=> true</code></pre>
     
 
 
@@ -353,9 +345,7 @@ This simple closure can be used when a whole Guard instance would be too much.</
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>import { satisfier } from 'narrow-minded'
-const satisfies = satisfier(['string', 'number'])
-satisfies(['horse', 42]) // => true</code></pre>
+        <pre class="prettyprint"><code>import { satisfier } from 'narrow-minded'const satisfies = satisfier(['string', 'number'])satisfies(['horse', 42]) // => true</code></pre>
     
 
 
@@ -423,7 +413,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line66">line 66</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line72">line 72</a>
             </span>
         </p>
     
@@ -431,6 +421,13 @@ set of options instead of asserting the value is an actual array.</p>
 
 
 
+
+
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>narrow(some('number'), 1) //=> truenarrow({ optional: some('string', 'undefined') }), { optional: 'yep' }) //=> truenarrow({ optional: some('string', 'undefined') }), {}) //=> true</code></pre>
+    
 
 
 </div>
@@ -509,9 +506,7 @@ set of options instead of asserting the value is an actual array.</p>
     <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>if (unknown.and('string').satisfied('Great')) {
-	console.log('Great')
-}</code></pre>
+        <pre class="prettyprint"><code>if (unknown.and('string').satisfied('Great')) {	console.log('Great')}</code></pre>
     
 
 
@@ -604,7 +599,7 @@ and arrays that will be validated recursively.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line118">line 118</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line124">line 124</a>
             </span>
         </p>
     
@@ -722,7 +717,7 @@ and arrays that will be validated recursively.</p>
         <p class="tag-source">
             <a href="narrow.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line112">line 112</a>
+                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line118">line 118</a>
             </span>
         </p>
     
