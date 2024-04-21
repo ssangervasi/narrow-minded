@@ -10,9 +10,13 @@ export type Primitive =
 	| 'undefined'
 	| 'object'
 	| 'function'
+
 export type NarrowerArr = Array<
 	Primitive | NarrowerObj | NarrowerArr | NarrowerSome
->
+> & {
+	[SOME]?: false
+}
+
 export interface NarrowerObj {
 	[k: string]: Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 }
@@ -40,8 +44,9 @@ export interface NarrowerObj {
  */
 export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 
-export type UnPrimitive<N> = /*
- */ N extends 'string'
+// prettier-ignore
+export type UnPrimitive<N> = 
+	N extends 'string'
 	? string
 	: N extends 'number'
 	? number
@@ -59,6 +64,7 @@ export type UnPrimitive<N> = /*
 	? Function
 	: unknown
 
+// prettier-ignore
 /* eslint-disable @typescript-eslint/array-type */
 /**
  * This attempts to infer a narrowed type based on a Narrow schema, which results in nice types
@@ -68,8 +74,8 @@ export type UnPrimitive<N> = /*
  * `never` (the array is empty, so the contents have no type) but this is not useful in practice, so
  * the content type is also replaced with `unknown`.
  */
-export type UnNarrow<N> = /*
- */ N extends Primitive
+export type UnNarrow<N> =
+	N extends Primitive
 	? UnPrimitive<N>
 	: N extends Array<never>
 	? Array<unknown>
@@ -135,7 +141,9 @@ export type UnNarrow<N> = /*
  * @param u The value of unknown type to validate.
  * @returns A type predicate that `u` satisfies `n`.
  */
-export const narrow = <N extends Primitive | NarrowerArr | NarrowerObj>(
+export const narrow = <
+	N extends Primitive | NarrowerArr | NarrowerObj | NarrowerSome,
+>(
 	n: N,
 	u: unknown,
 ): u is UnNarrow<N> => {
@@ -143,8 +151,8 @@ export const narrow = <N extends Primitive | NarrowerArr | NarrowerObj>(
 }
 
 export const SOME = Symbol('SOME')
-export type NarrowerSome = {
-	[SOME]: boolean
+export type NarrowerSome = Array<Primitive | NarrowerObj | NarrowerArr> & {
+	[SOME]: true
 }
 
 /**
@@ -159,12 +167,14 @@ export type NarrowerSome = {
  * @param opts The Narrower types that the value must be one of.
  * @returns An array with the SOME symbol set to true.
  */
-export const some = <NA extends NarrowerArr>(
-	...opts: NA
-): NA & NarrowerSome => {
-	return Object.assign(opts, {
+export const some = <
+	IA extends Array<Primitive | NarrowerObj | NarrowerArr | NarrowerSome>,
+>(
+	...opts: IA
+): NarrowerSome => {
+	return Object.assign([...opts], {
 		[SOME]: true,
-	})
+	} as const)
 }
 
 /**
@@ -185,7 +195,8 @@ const _narrow = <N extends Narrower>(n: N, u: unknown): boolean => {
 	}
 
 	if (Array.isArray(n)) {
-		if (SOME in n) {
+		if (SOME in n && n[SOME] === true) {
+			const y = n
 			return n.some(t => _narrow(t, u))
 		} else {
 			if (Array.isArray(u)) {

@@ -1,26 +1,28 @@
-export type TraversalNode = {
+export type TraversalNode<V = unknown> = {
 	property: string
-	value: unknown
+	value: V
 	level: number
-	parent: TraversalNode | undefined
+	parent: TraversalNode<PV> | undefined
 }
 
-export type TraversalVisit = (node: TraversalNode) => unknown
+export type TraversalVisit<V = unknown, R = unknown> = (
+	node: TraversalNode<V>,
+) => R
 
-export type TraversalDequeue = (q: TraversalNode[]) => TraversalNode
+export type TraversalDequeue<V = unknown> = (
+	q: Array<TraversalNode<V>>,
+) => TraversalNode<V>
 
-export type TraversalEnqueue = (
-	node: TraversalNode,
-	q: TraversalNode[],
-	visitResult: unknown,
+export type TraversalEnqueue<V = unknown, R = unknown> = (
+	node: TraversalNode<V>,
+	q: Array<TraversalNode<V>>,
+	visitResult: R,
 ) => void
 
-export type TraversalOrder = 'breadth' | 'depth'
-
-export type TraversalOptions = {
-	visit: TraversalVisit
-	dequeue: TraversalDequeue
-	enqueue: TraversalEnqueue
+export type TraversalOptions<V = unknown, R = unknown> = {
+	visit: TraversalVisit<V, R>
+	dequeue: TraversalDequeue<V>
+	enqueue: TraversalEnqueue<V, R>
 }
 
 export const makeSubnodes = (node: TraversalNode): TraversalNode[] => {
@@ -40,6 +42,8 @@ export const makeSubnodes = (node: TraversalNode): TraversalNode[] => {
 
 export const shouldContinue = (visitResult: unknown) =>
 	typeof visitResult === 'undefined' || Boolean(visitResult)
+
+export type TraversalOrder = 'breadth' | 'depth'
 
 export const DEFAULT_TRAVERSALS: Record<
 	TraversalOrder,
@@ -76,9 +80,9 @@ export const DEFAULT_TRAVERSALS: Record<
 /**
  * Generic tree traversal.
  */
-export const traverse = (
-	root: unknown,
-	{ visit, dequeue, enqueue }: TraversalOptions,
+export const traverse = <V = unknown, R = unknown>(
+	root: V,
+	{ visit, dequeue, enqueue }: TraversalOptions<V, R>,
 ) => {
 	const q: TraversalNode[] = [
 		{
