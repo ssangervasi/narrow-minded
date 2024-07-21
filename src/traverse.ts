@@ -2,7 +2,7 @@ export type TraversalNode<V = unknown> = {
 	property: string
 	value: V
 	level: number
-	parent: TraversalNode<PV> | undefined
+	parent: TraversalNode<V> | undefined
 }
 
 export type TraversalVisit<V = unknown, R = unknown> = (
@@ -84,7 +84,7 @@ export const traverse = <V = unknown, R = unknown>(
 	root: V,
 	{ visit, dequeue, enqueue }: TraversalOptions<V, R>,
 ) => {
-	const q: TraversalNode[] = [
+	const q: TraversalNode<V>[] = [
 		{
 			property: '',
 			value: root,

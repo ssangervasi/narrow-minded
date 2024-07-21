@@ -10,13 +10,9 @@ export type Primitive =
 	| 'undefined'
 	| 'object'
 	| 'function'
-
 export type NarrowerArr = Array<
 	Primitive | NarrowerObj | NarrowerArr | NarrowerSome
-> & {
-	[SOME]?: false
-}
-
+>
 export interface NarrowerObj {
 	[k: string]: Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 }
@@ -45,7 +41,7 @@ export interface NarrowerObj {
 export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
 
 // prettier-ignore
-export type UnPrimitive<N> = 
+export type UnPrimitive<N> =
 	N extends 'string'
 	? string
 	: N extends 'number'
@@ -64,7 +60,6 @@ export type UnPrimitive<N> =
 	? Function
 	: unknown
 
-// prettier-ignore
 /* eslint-disable @typescript-eslint/array-type */
 /**
  * This attempts to infer a narrowed type based on a Narrow schema, which results in nice types
@@ -74,6 +69,7 @@ export type UnPrimitive<N> =
  * `never` (the array is empty, so the contents have no type) but this is not useful in practice, so
  * the content type is also replaced with `unknown`.
  */
+// prettier-ignore
 export type UnNarrow<N> =
 	N extends Primitive
 	? UnPrimitive<N>
@@ -151,8 +147,8 @@ export const narrow = <
 }
 
 export const SOME = Symbol('SOME')
-export type NarrowerSome = Array<Primitive | NarrowerObj | NarrowerArr> & {
-	[SOME]: true
+export type NarrowerSome = {
+	[SOME]: boolean
 }
 
 /**
@@ -167,14 +163,12 @@ export type NarrowerSome = Array<Primitive | NarrowerObj | NarrowerArr> & {
  * @param opts The Narrower types that the value must be one of.
  * @returns An array with the SOME symbol set to true.
  */
-export const some = <
-	IA extends Array<Primitive | NarrowerObj | NarrowerArr | NarrowerSome>,
->(
-	...opts: IA
-): NarrowerSome => {
-	return Object.assign([...opts], {
+export const some = <NA extends NarrowerArr>(
+	...opts: NA
+): NA & NarrowerSome => {
+	return Object.assign(opts, {
 		[SOME]: true,
-	} as const)
+	})
 }
 
 /**
@@ -195,8 +189,7 @@ const _narrow = <N extends Narrower>(n: N, u: unknown): boolean => {
 	}
 
 	if (Array.isArray(n)) {
-		if (SOME in n && n[SOME] === true) {
-			const y = n
+		if (SOME in n) {
 			return n.some(t => _narrow(t, u))
 		} else {
 			if (Array.isArray(u)) {
