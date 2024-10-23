@@ -84,7 +84,7 @@ export const traverse = <V = unknown, R = unknown>(
 	root: V,
 	{ visit, dequeue, enqueue }: TraversalOptions<V, R>,
 ) => {
-	const q: TraversalNode<V>[] = [
+	const q: Array<TraversalNode<V>> = [
 		{
 			property: '',
 			value: root,

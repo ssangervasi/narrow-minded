@@ -1,5 +1,5 @@
 import { DiffResult, diffNarrow } from '~/diff'
-import { Narrower } from '~/narrow'
+import { Narrower, some } from '~/narrow'
 
 describe('diffNarrow', () => {
 	describe('depth 0', () => {
@@ -80,6 +80,57 @@ describe('diffNarrow', () => {
 		})
 	})
 
+	describe('object depth 2', () => {
+		const n = {
+			id: 'string',
+			data: {
+				count: 'number',
+				isCool: 'boolean',
+			},
+		} satisfies Narrower
+
+		test('match exact', () => {
+			const u = {
+				id: 'good-boy',
+				data: {
+					count: 1_000,
+					isCool: true,
+				},
+			}
+			expect(diffNarrow(n, u)).toStrictEqual([])
+		})
+
+		test('diff at multi depth', () => {
+			const u = {
+				id: 300,
+				data: {
+					count: 'ten',
+					isCool: null,
+				},
+			}
+			expect(diffNarrow(n, u)).toStrictEqual([
+				{
+					level: 1,
+					property: 'id',
+					expected: 'string',
+					received: 300,
+				},
+				{
+					level: 2,
+					property: 'count',
+					expected: 'number',
+					received: 'ten',
+				},
+				{
+					level: 2,
+					property: 'isCool',
+					expected: 'boolean',
+					received: null,
+				},
+			] satisfies DiffResult[])
+		})
+	})
+
 	describe('array depth 1', () => {
 		const n = ['string', 'number'] satisfies Narrower
 
@@ -116,14 +167,61 @@ describe('diffNarrow', () => {
 				{
 					level: 1,
 					property: '0',
-					expected: n,
+					expected: some(...n),
 					received: true,
 				},
 				{
 					level: 1,
 					property: '1',
-					expected: n,
+					expected: some(...n),
 					received: false,
+				},
+			])
+		})
+	})
+
+	describe('array depth 2', () => {
+		const n = [
+			{
+				x: 'number',
+				y: 'number',
+			},
+			['number'],
+		] satisfies Narrower
+
+		test('match', () => {
+			const u: unknown = [
+				// Also shows extra properties aren't diffed.
+				[10, 20],
+				[10, 20, 30],
+				{ x: 11, y: 21, z: 31 },
+			]
+			expect(diffNarrow(n, u)).toStrictEqual([])
+		})
+
+		test('diff homogeneous', () => {
+			const u: unknown = [
+				//
+				['nope'],
+				[10, 20, null],
+				{ x: 11, y: undefined },
+				// These are fine
+				[12, 22],
+				{ x: 12, y: 22 },
+			]
+			const nSub = some(...n)
+			expect(diffNarrow(n, u)).toStrictEqual([
+				{
+					level: 2,
+					property: '0',
+					expected: nSub,
+					received: 'nope',
+				},
+				{
+					level: 2,
+					property: '2',
+					expected: nSub,
+					received: null,
 				},
 			])
 		})

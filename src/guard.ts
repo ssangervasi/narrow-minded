@@ -103,8 +103,8 @@ export class Guard<P> {
 			other instanceof Guard
 				? other.NF
 				: other instanceof Function
-				? other
-				: (u: unknown): u is P2 => narrow(other, u)
+					? other
+					: (u: unknown): u is P2 => narrow(other, u)
 		return new Guard((u: unknown): u is P & P2 => left(u) && right(u))
 	}
 }
