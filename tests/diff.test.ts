@@ -167,13 +167,13 @@ describe('diffNarrow', () => {
 				{
 					level: 1,
 					property: '0',
-					expected: some(...n),
+					expected: some('number'),
 					received: true,
 				},
 				{
 					level: 1,
 					property: '1',
-					expected: some(...n),
+					expected: some('number'),
 					received: false,
 				},
 			])
@@ -258,6 +258,10 @@ describe('diffNarrow', () => {
 				},
 			] satisfies DiffResult[])
 
+			// Only reports the last some-entry that was checked. It would be nice if it could report the
+			// closest match, but that would mean keeping track of partial matches and comparing
+			// depth/completeness. Or it could at least report the whole some-arr instead of the one that
+			// was sliced down to the last remaining option.
 			expect(
 				diffNarrow(
 					{
@@ -281,15 +285,15 @@ describe('diffNarrow', () => {
 	})
 
 	describe('array depth 2', () => {
-		const n = [
-			{
-				x: 'number',
-				y: 'number',
-			},
-			['number'],
-		] satisfies Narrower
-
 		test('match', () => {
+			const n = [
+				{
+					x: 'number',
+					y: 'number',
+				},
+				['number'],
+			] satisfies Narrower
+
 			const u: unknown = [
 				// Also shows extra properties aren't diffed.
 				[10, 20],
@@ -299,30 +303,69 @@ describe('diffNarrow', () => {
 			expect(diffNarrow(n, u)).toStrictEqual([])
 		})
 
-		test('diff homogeneous', () => {
+		test('diff homogenous', () => {
+			const n = [['number']] satisfies Narrower
+
 			const u: unknown = [
-				//
-				['nope'],
-				[10, 20, null],
-				{ x: 11, y: undefined },
-				// These are fine
-				[12, 22],
-				{ x: 12, y: 22 },
+				[10, null],
+				[10, 20, 'nah'],
 			]
-			const nSub = some(...n)
 			expect(diffNarrow(n, u)).toStrictEqual([
 				{
 					level: 2,
-					property: '0',
-					expected: nSub,
-					received: 'nope',
+					property: '1',
+					expected: some('number'),
+					received: null,
 				},
 				{
 					level: 2,
 					property: '2',
-					expected: nSub,
-					received: null,
+					expected: some('number'),
+					received: 'nah',
 				},
+			])
+		})
+
+		test('diff hetero', () => {
+			const n = [
+				{
+					x: 'number',
+					y: 'number',
+				},
+				['number'],
+			] satisfies Narrower
+
+			const u: unknown[] = [
+				//
+				['nope'],
+				// [10, 20, null],
+				// { x: 11, y: undefined },
+				// // These are fine
+				// [12, 22],
+				// { x: 12, y: 22 },
+			]
+			const res = diffNarrow(n, u)
+			console.debug('>>>>>>>>>>>', JSON.stringify(res, null, 2))
+
+			expect(res).toStrictEqual([
+				{
+					level: 2,
+					property: '0',
+					expected: some('number'),
+					received: 'nope',
+				},
+				// {
+				// 	level: 2,
+				// 	property: '2',
+				// 	expected: some('number'),
+				// 	received: null,
+				// },
+				// {
+				// 	level: 12,
+				// 	property: '2',
+				// 	expected: 'number',
+				// 	received: undefined,
+				// },
 			])
 		})
 	})

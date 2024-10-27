@@ -16,34 +16,30 @@ type Diff = {
 type DiffNode = TraversalNode<Diff>
 
 const makeDiffNodes = (node: DiffNode): DiffNode[] => {
+	console.debug('DEBUG(ssangervasi)', 'makeDiffNodes', node)
+
 	const { expected, received } = node.value
 
-	const parent = node
-	const level = node.level + 1
-
 	if (isNarrowerArr(expected) && Array.isArray(received)) {
-		const expectArrAsSome = some(...expected)
+		return received.map((receivedSub, receivedIdx): DiffNode => {
+			const expectArrAsSome = some(...expected)
 
-		return received.map(
-			(receivedSub, receivedIdx): DiffNode => ({
-				level,
-				parent,
+			return {
+				parent: node,
+				level: node.level + 1,
 				property: receivedIdx.toString(),
 				value: {
 					expected: expectArrAsSome,
 					received: receivedSub,
 				},
-			}),
-		)
+			}
+		})
 	}
 
-	// Just make one node
 	if (isNarrowerSome(expected)) {
-		console.log('makeDiffNodes isNarrowerSome', node)
-		// Descend by unwrapping the first some-entry. Maybe adds a redundant step because we've already compared that
 		return [
 			{
-				parent,
+				parent: node,
 				level: node.level,
 				property: node.property,
 				value: {
@@ -59,8 +55,8 @@ const makeDiffNodes = (node: DiffNode): DiffNode[] => {
 			const receivedSub = received[keySub]
 
 			return {
-				level,
-				parent,
+				parent: node,
+				level: node.level + 1,
 				property: keySub,
 				value: {
 					expected: expectedSub,
@@ -69,6 +65,8 @@ const makeDiffNodes = (node: DiffNode): DiffNode[] => {
 			}
 		})
 	}
+
+	console.debug('DEBUG(ssangervasi)', '>>> no nodes')
 
 	return []
 }
@@ -94,16 +92,27 @@ export const diffNarrow = <N extends Narrower>(n: N, u: unknown) => {
 			const { expected, received } = value
 
 			if (isShallowMatch(expected, received)) {
+				console.debug('DEBUG(ssangervasi)', 'visit>shallow')
+
 				return true
 			}
 
 			// If there is an ancestor some-arr that hasn't been traversed yet, then don't record
 			// a diff yet. Once we get to only 1 some-arr entry remaining, `findAncestorSome` will return nothing.
 			if (findAncestorSome(node)) {
-				console.debug('DEBUG(ssangervasi)', 'mismatched, but ancestor', node)
+				console.debug(
+					'DEBUG(ssangervasi)',
+					'visit>mismatched, but ancestor',
+					node,
+				)
 
 				return false
 			}
+
+			console.debug('DEBUG(ssangervasi)', 'visit>mismatched, DONE', {
+				expected,
+				received,
+			})
 
 			diffsResults.push({
 				level: node.level,
@@ -125,6 +134,11 @@ export const diffNarrow = <N extends Narrower>(n: N, u: unknown) => {
 
 			const altAncestor = makeAltSomeAncestor(node)
 			if (altAncestor) {
+				console.debug('DEBUG(ssangervasi)', 'adding alt ancestor', {
+					altAncestor,
+					node,
+				})
+
 				q.push(altAncestor)
 			}
 		},
@@ -134,7 +148,7 @@ export const diffNarrow = <N extends Narrower>(n: N, u: unknown) => {
 }
 
 /**
- * First element is the input leaf.
+ * First element is the input leaf. Last element is the highest ancestor (root).
  */
 const listAncestors = (leaf: DiffNode): DiffNode[] => {
 	const ancestors: DiffNode[] = [leaf]
@@ -169,6 +183,7 @@ const makeAltSomeAncestor = (
 	node: TraversalNode<Diff>,
 ): DiffNode | undefined => {
 	const ancestorSomeNode = findAncestorSome(node)
+
 	const ancestorExpected =
 		ancestorSomeNode?.value?.expected &&
 		isNarrowerSome(ancestorSomeNode?.value?.expected)
@@ -203,7 +218,7 @@ const isNarrowerObj = (n: Narrower): n is NarrowerObj =>
 	!Array.isArray(n) && typeof n === 'object' && n !== null
 
 const isRecordObj = (u: unknown): u is Record<string, unknown> =>
-	typeof u === 'object' && u !== null
+	typeof u === 'object' && u !== null && !Array.isArray(u)
 
 const isShallowMatch = (n: Narrower, u: unknown): boolean => {
 	if (typeof n === 'string') {
@@ -213,20 +228,20 @@ const isShallowMatch = (n: Narrower, u: unknown): boolean => {
 	if (isNarrowerSome(n)) {
 		// An empty some-arr matches nothing.
 		if (n.length === 0) {
-			return true
+			return false
 		}
 
 		// A shallow match only checks the first entry.
 		const firstNSub = n[0]!
-		isShallowMatch(firstNSub, u)
+		return isShallowMatch(firstNSub, u)
 	}
 
 	if (isNarrowerArr(n)) {
 		return Array.isArray(u)
 	}
 
-	if (typeof u === 'object' && u !== null) {
-		return true
+	if (isNarrowerObj(n)) {
+		return isRecordObj(u)
 	}
 
 	return false
