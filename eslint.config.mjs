@@ -58,6 +58,7 @@ export default [
 				'error',
 				{
 					code: 100,
+					comments: 120,
 				},
 			],
 

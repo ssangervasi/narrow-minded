@@ -1,5 +1,5 @@
 import { DiffResult, diffNarrow } from '~/diff'
-import { Narrower, some } from '~/narrow'
+import { narrow, Narrower, some } from '~/narrow'
 
 describe('diffNarrow', () => {
 	describe('depth 0', () => {
@@ -177,6 +177,106 @@ describe('diffNarrow', () => {
 					received: false,
 				},
 			])
+		})
+	})
+
+	describe('some', () => {
+		const n = some(
+			{
+				outer: some(
+					{
+						inner: 'string',
+					},
+					{
+						twinner: 'number',
+					},
+				),
+			},
+			{
+				bouter: some(
+					{
+						binner: 'string',
+					},
+					{
+						bwinner: 'number',
+					},
+				),
+			},
+		)
+
+		test('match 0.0', () => {
+			const u: unknown = {
+				outer: {
+					inner: 'yep',
+				},
+			}
+			expect(diffNarrow(n, u)).toStrictEqual([])
+		})
+
+		test('match 0.1', () => {
+			const u: unknown = {
+				outer: {
+					twinner: 2,
+				},
+			}
+			expect(diffNarrow(n, u)).toStrictEqual([])
+		})
+
+		test('diff 0', () => {
+			const u: unknown = 'nope'
+			expect(diffNarrow(n, u)).toStrictEqual([
+				{
+					level: 0,
+					property: '',
+					// The last possible value will be in the diff.
+					expected: some(n[1]),
+					received: 'nope',
+				},
+			] satisfies DiffResult[])
+		})
+
+		test('diff 0.0', () => {
+			const u: unknown = {
+				outer: {
+					inner: null,
+				},
+			}
+
+			// Sanity check it actually should have a diff
+			expect(narrow(n, u)).toBe(false)
+			const result = diffNarrow(n, u)
+			console.debug('DEBUG(ssangervasi)', 'result', result[0]?.expected)
+
+			expect(result).toStrictEqual([
+				{
+					level: 1,
+					property: 'bouter',
+					expected: some({
+						bwinner: 'number',
+					}),
+					received: undefined,
+				},
+			] satisfies DiffResult[])
+
+			expect(
+				diffNarrow(
+					{
+						bouter: {
+							bwinner: 'number',
+						},
+					},
+					u,
+				),
+			).toStrictEqual([
+				{
+					level: 1,
+					property: 'bouter',
+					expected: {
+						bwinner: 'number',
+					},
+					received: undefined,
+				},
+			] satisfies DiffResult[])
 		})
 	})
 
