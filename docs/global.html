@@ -90,7 +90,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Guard.html">Guard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#satisfier">satisfier</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Interfaces</h3><ul><li><a href="NarrowerObj.html">NarrowerObj</a></li></ul><h3>Global</h3><ul><li><a href="global.html#diffNarrow">diffNarrow</a></li><li><a href="global.html#findAncestorSome">findAncestorSome</a></li><li><a href="global.html#isNarrowerArr">isNarrowerArr</a></li><li><a href="global.html#isNarrowerObj">isNarrowerObj</a></li><li><a href="global.html#isNarrowerSome">isNarrowerSome</a></li><li><a href="global.html#isRecordObj">isRecordObj</a></li><li><a href="global.html#listAncestors">listAncestors</a></li><li><a href="global.html#makeAltSomeAncestor">makeAltSomeAncestor</a></li><li><a href="global.html#makeDiffNodes">makeDiffNodes</a></li><li><a href="global.html#narrow">narrow</a></li><li><a href="global.html#satisfier">satisfier</a></li><li><a href="global.html#SOME">SOME</a></li><li><a href="global.html#some">some</a></li><li><a href="global.html#traverse">traverse</a></li><li><a href="global.html#unknown">unknown</a></li></ul></div>
                 
             </nav>
         </div>
@@ -177,6 +177,374 @@
         <div class='vertical-section'>
             <h1>Members</h1>
             <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="diffNarrow">
+    <a class="href-link" href="#diffNarrow">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        diffNarrow
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="diff.ts.html" class="button">View Source</a>
+            <span>
+                <a href="diff.ts.html">diff.ts</a>, <a href="diff.ts.html#line51">line 51</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    
+        <pre class="prettyprint"><code>// Given this failed narrow:narrow(	{		title: 'string',		count: 'number',	},	{		title: 10,		count: 'bad boy',	},)//=> false// The diff would be:diffNarrow(	{		title: 'string',		count: 'number',	},	{		title: 10,		count: 'bad boy',	},)//=>[	{		level: 1,		property: 'title',		expected: 'string',		received: 10,	},	{		level: 1,		property: 'count',		expected: 'number',		received: 'bad boy',	},]</code></pre>
+    
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="isNarrowerArr">
+    <a class="href-link" href="#isNarrowerArr">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        isNarrowerArr
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Type guard for <code>NarrowerArr</code> type.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="schema.ts.html" class="button">View Source</a>
+            <span>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line29">line 29</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="isNarrowerObj">
+    <a class="href-link" href="#isNarrowerObj">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        isNarrowerObj
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Type guard for <code>NarrowerObj</code> type</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="schema.ts.html" class="button">View Source</a>
+            <span>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line41">line 41</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="isNarrowerSome">
+    <a class="href-link" href="#isNarrowerSome">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        isNarrowerSome
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Type guard for <code>NarrowerSome</code> type.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="schema.ts.html" class="button">View Source</a>
+            <span>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line35">line 35</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="isRecordObj">
+    <a class="href-link" href="#isRecordObj">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        isRecordObj
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Type guard for an indexable object</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="schema.ts.html" class="button">View Source</a>
+            <span>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line47">line 47</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
             
                 <div class="member">
 
@@ -353,6 +721,79 @@ This simple closure can be used when a whole Guard instance would be too much.</
             
                 <div class="member">
 
+<h4 class="name" id="SOME">
+    <a class="href-link" href="#SOME">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        SOME
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Unique symbol that is used to decorate an array of Narrower schemas.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="schema.ts.html" class="button">View Source</a>
+            <span>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line6">line 6</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
 <h4 class="name" id="some">
     <a class="href-link" href="#some">#</a>
     
@@ -411,9 +852,9 @@ set of options instead of asserting the value is an actual array.</p>
 
     
         <p class="tag-source">
-            <a href="narrow.ts.html" class="button">View Source</a>
+            <a href="schema.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line72">line 72</a>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line19">line 19</a>
             </span>
         </p>
     
@@ -428,6 +869,79 @@ set of options instead of asserting the value is an actual array.</p>
     
         <pre class="prettyprint"><code>narrow(some('number'), 1) //=> truenarrow({ optional: some('string', 'undefined') }), { optional: 'yep' }) //=> truenarrow({ optional: some('string', 'undefined') }), {}) //=> true</code></pre>
     
+
+
+</div>
+            
+                <div class="member">
+
+<h4 class="name" id="traverse">
+    <a class="href-link" href="#traverse">#</a>
+    
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        traverse
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Generic tree traversal.</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="traverse.ts.html" class="button">View Source</a>
+            <span>
+                <a href="traverse.ts.html">traverse.ts</a>, <a href="traverse.ts.html#line41">line 41</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
 
 
 </div>
@@ -493,7 +1007,7 @@ set of options instead of asserting the value is an actual array.</p>
         <p class="tag-source">
             <a href="guard.ts.html" class="button">View Source</a>
             <span>
-                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line90">line 90</a>
+                <a href="guard.ts.html">guard.ts</a>, <a href="guard.ts.html#line87">line 87</a>
             </span>
         </p>
     
@@ -517,11 +1031,604 @@ set of options instead of asserting the value is an actual array.</p>
     
 
     
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="findAncestorSome">
+        <a class="href-link" href="#findAncestorSome">#</a>
+        
+        <span class="code-name">
+            
+                findAncestorSome<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Traverses the ancestors to find the lowest one that is a some-arr and has &gt;1 entry. A some-arr with 1
+entry would be the ancestor that led to the current (unmatched) node. Includes the input leaf as
+the first element (if it has remaining entries).</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="diff.ts.html" class="button">View Source</a>
+            <span>
+                <a href="diff.ts.html">diff.ts</a>, <a href="diff.ts.html#line169">line 169</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="listAncestors">
+        <a class="href-link" href="#listAncestors">#</a>
+        
+        <span class="code-name">
+            
+                listAncestors<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>First element is the input leaf. Last element is the highest ancestor (root).</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="diff.ts.html" class="button">View Source</a>
+            <span>
+                <a href="diff.ts.html">diff.ts</a>, <a href="diff.ts.html#line151">line 151</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="makeAltSomeAncestor">
+        <a class="href-link" href="#makeAltSomeAncestor">#</a>
+        
+        <span class="code-name">
+            
+                makeAltSomeAncestor<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Searches the node's ancestors for the deepest some-node that has remaining alternative schemas.
+If found, the first some-entry is popped and a copy of the node with that (already checked) entry
+removed.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="diff.ts.html" class="button">View Source</a>
+            <span>
+                <a href="diff.ts.html">diff.ts</a>, <a href="diff.ts.html#line181">line 181</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="makeDiffNodes">
+        <a class="href-link" href="#makeDiffNodes">#</a>
+        
+        <span class="code-name">
+            
+                makeDiffNodes<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Checks if <code>node</code> needs to be traversed and builds the required sub-nodes.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="diff.ts.html" class="button">View Source</a>
+            <span>
+                <a href="diff.ts.html">diff.ts</a>, <a href="diff.ts.html#line100">line 100</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
 
     
         <div class='vertical-section'>
             <h1>Type Definitions</h1>
             <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<code class="param-type">object</code>
+
+
+    </span>
+
+<h4 class="name" id="DiffResult">
+    <a class="href-link" href="#DiffResult">#</a>
+    
+    <span class="code-name">
+        DiffResult
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>level</code></td>
+    
+
+    <td class="type">
+    
+        
+<code class="param-type">number</code>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>property</code></td>
+    
+
+    <td class="type">
+    
+        
+<code class="param-type">string</code>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>expected</code></td>
+    
+
+    <td class="type">
+    
+        
+<code class="param-type"><a href="global.html#Narrower">Narrower</a></code>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>received</code></td>
+    
+
+    <td class="type">
+    
+        
+<code class="param-type"><a href="global.html#unknown">unknown</a></code>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="diff.ts.html" class="button">View Source</a>
+            <span>
+                <a href="diff.ts.html">diff.ts</a>, <a href="diff.ts.html#line229">line 229</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
             
                 <div class="member">
 
@@ -534,10 +1641,10 @@ set of options instead of asserting the value is an actual array.</p>
 <code class="param-type">NarrowerArr</code>
 |
 
-<code class="param-type">NarrowerObj</code>
+<code class="param-type"><a href="NarrowerObj.html">NarrowerObj</a></code>
 |
 
-<code class="param-type">NarrowerSome</code>
+<code class="param-type"><a href="global.html#NarrowerSome">NarrowerSome</a></code>
 
 
     </span>
@@ -597,9 +1704,9 @@ and arrays that will be validated recursively.</p>
 
     
         <p class="tag-source">
-            <a href="narrow.ts.html" class="button">View Source</a>
+            <a href="schema.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line124">line 124</a>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line59">line 59</a>
             </span>
         </p>
     
@@ -627,6 +1734,137 @@ and arrays that will be validated recursively.</p>
 	],
 }</code></pre>
     
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<code class="param-type">object</code>
+
+
+    </span>
+
+<h4 class="name" id="NarrowerSome">
+    <a class="href-link" href="#NarrowerSome">#</a>
+    
+    <span class="code-name">
+        NarrowerSome
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Supplemental type for <code>SOME</code> decorated arrays. Note that this <em>does not</em> intersect with an
+<code>Array</code> type of any kind, because the array type must be kept generic in order for inference and
+un-narrowing to work.</p>
+</div>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>undefined</code></td>
+    
+
+    <td class="type">
+    
+        
+<code class="param-type">true</code>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="schema.ts.html" class="button">View Source</a>
+            <span>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line83">line 83</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
 
 
 </div>
@@ -715,9 +1953,9 @@ and arrays that will be validated recursively.</p>
 
     
         <p class="tag-source">
-            <a href="narrow.ts.html" class="button">View Source</a>
+            <a href="schema.ts.html" class="button">View Source</a>
             <span>
-                <a href="narrow.ts.html">narrow.ts</a>, <a href="narrow.ts.html#line118">line 118</a>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line49">line 49</a>
             </span>
         </p>
     
@@ -745,7 +1983,7 @@ and arrays that will be validated recursively.</p>
             
             <footer class="footer">
                 <div class="content has-text-centered">
-                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a></p>
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a></p>
                     <p class="sidebar-created-by">
                         <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
                         <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

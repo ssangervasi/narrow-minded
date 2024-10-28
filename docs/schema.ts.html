@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>narrow-minded narrow.ts</title>
+  <title>narrow-minded schema.ts</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -100,7 +100,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>narrow.ts</h1>
+                    <h1>schema.ts</h1>
                 </header>
                 
 
@@ -109,45 +109,67 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import {
-	Narrower,
-	NarrowerArr,
-	NarrowerObj,
-	NarrowerSome,
-	Primitive,
-	SOME,
-	UnNarrow,
-} from './schema'
+            <pre class="prettyprint source linenums"><code>/**
+ * Includes all values that can be returned by a `typeof` expression.
+ */
+export type Primitive =
+	| 'string'
+	| 'number'
+	| 'bigint'
+	| 'boolean'
+	| 'symbol'
+	| 'undefined'
+	| 'object'
+	| 'function'
 
 /**
- * This function validates any value with `typeof` checks. Arrays and objects are traversed
- * according to the Narrower structure. The boolean return value is also a TypeScript type
- * predicate.
- *
- * **Objects** -
- * All keys of `n` are checked against `u` and their narrow is validated if the key exists.
- * Keys that are missing from `u` are treated as having the value `undefined`. This means
- * you can use `{ key: some('undefined', ...)}` to allow for missing/optional keys.
- *
- * **Arrays** -
- * Including multiple types in a Narrower array allows for mixed types. Each item in `u` must
- * satisfy at least one of the types.
- *
- * **Null** -
- * `typeof null` is `'object'` but null cannot have any keys. Use `{}` to match an object
- * that is not null.
+ * Reverse mapping `Primitive` type to the string that represents each primitive.
+ */
+// prettier-ignore
+export type UnPrimitive&lt;N> =
+	N extends 'string'
+	? string
+	: N extends 'number'
+	? number
+	: N extends 'bigint'
+	? bigint
+	: N extends 'boolean'
+	? boolean
+	: N extends 'symbol'
+	? symbol
+	: N extends 'undefined'
+	? undefined
+	: N extends 'object'
+	? object
+	: N extends 'function'
+	? Function
+	: unknown
+
+/**
+ * Recursive type of an array Narow schema.
+ */
+export type NarrowerArr = Array&lt;
+	Primitive | NarrowerObj | NarrowerArr | NarrowerSome
+>
+
+/**
+ * Recursive type of an object Narow schema
+ */
+export interface NarrowerObj {
+	[k: string]: Primitive | NarrowerArr | NarrowerObj | NarrowerSome
+}
+
+/**
+ * This is the type that specifies a narrowed structure. The simplest form is a Primitive string,
+ * which will validate using a `typeof` comparison. Deeper structures can be defined using objects
+ * and arrays that will be validated recursively.
  *
  * @example
  * // An array of mixed strings and numbers:
- * narrow(['string', 'number'], [1, 'two']) //=> true
- * narrow(['string', 'number'], [{}]) //=> false
- *
- * // Null:
- * narrow('object', null) //=> true
- * narrow({}, null) //=> false
+ * ['string', 'number']
  *
  * // A deep object:
- * narrow({
+ * {
  * 	n: 'number',
  * 	child: {
  * 		word: 'string'
@@ -156,73 +178,101 @@
  * 		['number'],
  * 		'boolean'
  * 	],
- * }, {
- * 	n: 3.14,
- * 	child: {
- * 		word: 'Yes'
- * 	},
- * 	things: [
- * 		false,
- * 		[1, 2, 3],
- * 		true
- * 	]
- * }) //=> true
- *
- * @param n The Narrower schema.
- * @param u The value of unknown type to validate.
- * @returns A type predicate that `u` satisfies `n`.
+ * }
  */
-export const narrow = &lt;
-	N extends Primitive | NarrowerArr | NarrowerObj | NarrowerSome,
->(
-	n: N,
-	u: unknown,
-): u is UnNarrow&lt;N> => {
-	return _narrow(n, u)
+export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
+
+/* eslint-disable @typescript-eslint/array-type */
+/**
+ * This attempts to infer a narrowed type based on a Narrow schema, which results in nice types
+ * within conditional blocks. If inference is not possible, the type remains `unknown`.
+ *
+ * An empty array as a schema is a special case: TypeScript wants to assume the contained type is
+ * `never` (the array is empty, so the contents have no type) but this is not useful in practice, so
+ * the content type is also replaced with `unknown`.
+ */
+// prettier-ignore
+export type UnNarrow&lt;N> =
+	N extends Primitive
+	? UnPrimitive&lt;N>
+	: N extends Array&lt;never>
+	? Array&lt;unknown>
+	: N extends Array&lt;infer N2>
+	? N extends NarrowerSome
+		? UnNarrow&lt;N2>
+		: Array&lt;UnNarrow&lt;N2>>
+	: N extends Record&lt;keyof N, infer _N2>
+	? { [k in keyof N]: UnNarrow&lt;N[k]> }
+	: unknown
+/* eslint-enable @typescript-eslint/array-type */
+
+/**
+ * Unique symbol that is used to decorate an array of Narrower schemas.
+ */
+export const SOME = Symbol('SOME')
+
+/**
+ * Supplemental type for `SOME` decorated arrays. Note that this _does not_ intersect with an
+ * `Array` type of any kind, because the array type must be kept generic in order for inference and
+ * un-narrowing to work.
+ */
+export type NarrowerSome = {
+	[SOME]: true
 }
 
 /**
- * This does the actual value comparison based on the Narrower schema.
- * It leaves out the fancy type inference.
- * @private
- * @param n The schema.
- * @param u The value to validate.
- * @returns Whether u matches n.
+ * Decorates a narrower array to indicate narrowing should use the array as a
+ * set of options instead of asserting the value is an actual array.
+ *
+ * @example
+ * narrow(some('number'), 1) //=> true
+ * narrow({ optional: some('string', 'undefined') }), { optional: 'yep' }) //=> true
+ * narrow({ optional: some('string', 'undefined') }), {}) //=> true
+ *
+ * @param narrowers The Narrower sub-schemas that the value must be one of.
+ * @returns An array with the SOME symbol set to true.
  */
-const _narrow = &lt;N extends Narrower>(n: N, u: unknown): boolean => {
-	if (typeof n === 'string') {
-		if (n === typeof u) {
-			return true
-		} else {
-			return false
-		}
-	}
-
-	if (Array.isArray(n)) {
-		if (SOME in n) {
-			return n.some(t => _narrow(t, u))
-		} else {
-			if (Array.isArray(u)) {
-				if (n.length === 0) {
-					// An empty schema array represents an array with unknown contents.
-					return true
-				}
-
-				return u.every(v => n.some(t => _narrow(t, v)))
-			} else {
-				return false
-			}
-		}
-	}
-
-	if (typeof u !== 'object' || u === null) {
-		return false
-	}
-
-	const o = u as NarrowerObj
-
-	return Object.entries(n).every(([k, t]) => _narrow(t, o[k]))
+export const some = &lt;NA extends NarrowerArr>(
+	...narrowers: NA
+): NA &amp; NarrowerSome => {
+	return Object.assign(narrowers, {
+		[SOME]: true,
+	} as const)
 }
+
+/**
+ * Type guard for `NarrowerArr` type.
+ * @param n Narrower schema
+ * @returns true if `n` is an array and is _not_ `SOME` decorated
+ */
+export const isNarrowerArr = (
+	n: Narrower,
+): n is NarrowerArr &amp; { [SOME]: never } => Array.isArray(n) &amp;&amp; !(SOME in n)
+
+/**
+ * Type guard for `NarrowerSome` type.
+ * @param n Narrower schema
+ * @returns true if `n` is a `SOME` decorated array.
+ */
+export const isNarrowerSome = (n: Narrower): n is NarrowerArr &amp; NarrowerSome =>
+	Array.isArray(n) &amp;&amp; SOME in n
+
+/**
+ * Type guard for `NarrowerObj` type
+ * @param n Narrower schema
+ * @returns true if `n` is an indexable object.
+ */
+export const isNarrowerObj = (
+	n: Narrower,
+): n is NarrowerObj &amp; { [SOME]: never } => isRecordObj(n)
+
+/**
+ * Type guard for an indexable object
+ * @param u Any value
+ * @returns true if `u` is a non-array, non-null object.
+ */
+export const isRecordObj = (u: unknown): u is Record&lt;string, unknown> =>
+	typeof u === 'object' &amp;&amp; u !== null &amp;&amp; !Array.isArray(u)
 </code></pre>
         </article>
     </section>

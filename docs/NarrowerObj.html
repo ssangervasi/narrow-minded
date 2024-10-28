@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>narrow-minded narrow.ts</title>
+  <title>narrow-minded NarrowerObj</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -99,133 +97,101 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Source</p>
-                    <h1>narrow.ts</h1>
+                    <p>Interface</p>
+                    <h1>NarrowerObj</h1>
                 </header>
                 
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>import {
-	Narrower,
-	NarrowerArr,
-	NarrowerObj,
-	NarrowerSome,
-	Primitive,
-	SOME,
-	UnNarrow,
-} from './schema'
+        <h2>NarrowerObj</h2>
+        
+    
+</header>
 
-/**
- * This function validates any value with `typeof` checks. Arrays and objects are traversed
- * according to the Narrower structure. The boolean return value is also a TypeScript type
- * predicate.
- *
- * **Objects** -
- * All keys of `n` are checked against `u` and their narrow is validated if the key exists.
- * Keys that are missing from `u` are treated as having the value `undefined`. This means
- * you can use `{ key: some('undefined', ...)}` to allow for missing/optional keys.
- *
- * **Arrays** -
- * Including multiple types in a Narrower array allows for mixed types. Each item in `u` must
- * satisfy at least one of the types.
- *
- * **Null** -
- * `typeof null` is `'object'` but null cannot have any keys. Use `{}` to match an object
- * that is not null.
- *
- * @example
- * // An array of mixed strings and numbers:
- * narrow(['string', 'number'], [1, 'two']) //=> true
- * narrow(['string', 'number'], [{}]) //=> false
- *
- * // Null:
- * narrow('object', null) //=> true
- * narrow({}, null) //=> false
- *
- * // A deep object:
- * narrow({
- * 	n: 'number',
- * 	child: {
- * 		word: 'string'
- * 	},
- * 	things: [
- * 		['number'],
- * 		'boolean'
- * 	],
- * }, {
- * 	n: 3.14,
- * 	child: {
- * 		word: 'Yes'
- * 	},
- * 	things: [
- * 		false,
- * 		[1, 2, 3],
- * 		true
- * 	]
- * }) //=> true
- *
- * @param n The Narrower schema.
- * @param u The value of unknown type to validate.
- * @returns A type predicate that `u` satisfies `n`.
- */
-export const narrow = &lt;
-	N extends Primitive | NarrowerArr | NarrowerObj | NarrowerSome,
->(
-	n: N,
-	u: unknown,
-): u is UnNarrow&lt;N> => {
-	return _narrow(n, u)
-}
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Recursive type of an object Narow schema</p></div>
+        
 
-/**
- * This does the actual value comparison based on the Narrower schema.
- * It leaves out the fancy type inference.
- * @private
- * @param n The schema.
- * @param u The value to validate.
- * @returns Whether u matches n.
- */
-const _narrow = &lt;N extends Narrower>(n: N, u: unknown): boolean => {
-	if (typeof n === 'string') {
-		if (n === typeof u) {
-			return true
-		} else {
-			return false
-		}
-	}
+        
 
-	if (Array.isArray(n)) {
-		if (SOME in n) {
-			return n.some(t => _narrow(t, u))
-		} else {
-			if (Array.isArray(u)) {
-				if (n.length === 0) {
-					// An empty schema array represents an array with unknown contents.
-					return true
-				}
 
-				return u.every(v => n.some(t => _narrow(t, v)))
-			} else {
-				return false
-			}
-		}
-	}
+<dl class="details">
 
-	if (typeof u !== 'object' || u === null) {
-		return false
-	}
+    
 
-	const o = u as NarrowerObj
+    
 
-	return Object.entries(n).every(([k, t]) => _narrow(t, o[k]))
-}
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="schema.ts.html" class="button">View Source</a>
+            <span>
+                <a href="schema.ts.html">schema.ts</a>, <a href="schema.ts.html#line55">line 55</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
