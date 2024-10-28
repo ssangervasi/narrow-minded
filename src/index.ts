@@ -8,3 +8,6 @@
  */
 export * from './narrow.js'
 export * from './guard.js'
+export * from './schema.js'
+export * from './diff.js'
+export * from './traverse.js'

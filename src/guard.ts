@@ -1,4 +1,5 @@
-import { narrow, Narrower, UnNarrow } from './narrow'
+import { Narrower, UnNarrow } from './schema'
+import { narrow } from './narrow'
 
 /**
  * Creates a function from a narrower schema that can be reused to narrow objects.
@@ -17,9 +18,6 @@ export const satisfier =
 export type NarrowingFunction<P> = (u: unknown) => u is P
 export type Payload<G> = G extends Guard<infer P> ? P : unknown
 
-/**
- *
- */
 export class Guard<P> {
 	/**
 	 * Creates a new guard that uses a `narrow` function.

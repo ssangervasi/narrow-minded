@@ -1,5 +1,6 @@
 import { unknown, Guard, Payload, satisfier } from '~/guard'
-import { narrow, some } from '~/narrow'
+import { narrow } from '~/narrow'
+import { some } from '~/schema'
 
 const deepSatisfied = satisfier({
 	n: 'number',

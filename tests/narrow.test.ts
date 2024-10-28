@@ -1,6 +1,7 @@
 import { sample } from 'lodash'
 
-import { narrow, some, Narrower } from '~/narrow'
+import { narrow } from '~/narrow'
+import { some, Narrower } from '~/schema'
 
 describe('narrow value checking', () => {
 	it('works on primitives', () => {

@@ -1,12 +1,11 @@
 import {
+	isNarrowerArr,
+	isNarrowerObj,
+	isNarrowerSome,
+	isRecordObj,
 	Narrower,
-	NarrowerArr,
-	NarrowerObj,
-	NarrowerSome,
-	Primitive,
 	some,
-	SOME,
-} from './narrow'
+} from './schema'
 import { TraversalNode, traverse } from './traverse'
 
 type Diff = {
@@ -15,62 +14,9 @@ type Diff = {
 }
 type DiffNode = TraversalNode<Diff>
 
-const makeDiffNodes = (node: DiffNode): DiffNode[] => {
-	console.debug('DEBUG(ssangervasi)', 'makeDiffNodes', node)
-
-	const { expected, received } = node.value
-
-	if (isNarrowerArr(expected) && Array.isArray(received)) {
-		return received.map((receivedSub, receivedIdx): DiffNode => {
-			const expectArrAsSome = some(...expected)
-
-			return {
-				parent: node,
-				level: node.level + 1,
-				property: receivedIdx.toString(),
-				value: {
-					expected: expectArrAsSome,
-					received: receivedSub,
-				},
-			}
-		})
-	}
-
-	if (isNarrowerSome(expected)) {
-		return [
-			{
-				parent: node,
-				level: node.level,
-				property: node.property,
-				value: {
-					expected: expected[0]!,
-					received,
-				},
-			},
-		]
-	}
-
-	if (isNarrowerObj(expected) && isRecordObj(received)) {
-		return Object.entries(expected).map(([keySub, expectedSub]): DiffNode => {
-			const receivedSub = received[keySub]
-
-			return {
-				parent: node,
-				level: node.level + 1,
-				property: keySub,
-				value: {
-					expected: expectedSub,
-					received: receivedSub,
-				},
-			}
-		})
-	}
-
-	console.debug('DEBUG(ssangervasi)', '>>> no nodes')
-
-	return []
-}
-
+/**
+ *
+ */
 export type DiffResult = {
 	level: number
 	property: string
@@ -78,8 +24,55 @@ export type DiffResult = {
 	received: unknown
 }
 
+/**
+ *
+ * @example
+ * // Given this failed narrow:
+ * narrow(
+ * 	{
+ * 		title: 'string',
+ * 		count: 'number',
+ * 	},
+ * 	{
+ * 		title: 10,
+ * 		count: 'bad boy',
+ * 	},
+ * )
+ * //=> false
+ *
+ * // The diff would be:
+ * diffNarrow(
+ * 	{
+ * 		title: 'string',
+ * 		count: 'number',
+ * 	},
+ * 	{
+ * 		title: 10,
+ * 		count: 'bad boy',
+ * 	},
+ * )
+ * //=>
+ * [
+ * 	{
+ * 		level: 1,
+ * 		property: 'title',
+ * 		expected: 'string',
+ * 		received: 10,
+ * 	},
+ * 	{
+ * 		level: 1,
+ * 		property: 'count',
+ * 		expected: 'number',
+ * 		received: 'bad boy',
+ * 	},
+ * ]
+ * @param n
+ * @param u
+ * @returns Array of `DiffResult` objects that indicate where `u` failed to satisfy `n`. An empty
+ * array is the same as `narrow(n, u)` returning true.
+ */
 export const diffNarrow = <N extends Narrower>(n: N, u: unknown) => {
-	const diffsResults: DiffResult[] = []
+	const diffResults: DiffResult[] = []
 
 	const root: Diff = {
 		expected: n,
@@ -92,29 +85,20 @@ export const diffNarrow = <N extends Narrower>(n: N, u: unknown) => {
 			const { expected, received } = value
 
 			if (isShallowMatch(expected, received)) {
-				console.debug('DEBUG(ssangervasi)', 'visit>shallow')
-
 				return true
 			}
 
-			// If there is an ancestor some-arr that hasn't been traversed yet, then don't record
-			// a diff yet. Once we get to only 1 some-arr entry remaining, `findAncestorSome` will return nothing.
+			// If there is an ancestor some-arr that hasn't been traversed yet, then don't record a diff
+			// yet. Once we get to only 1 some-arr entry remaining, `findAncestorSome` will return
+			// nothing.
+			//
+			// This is called a second time within `enqueue` which is a performance hit. This could be
+			// restructured to only do the tree climb once.
 			if (findAncestorSome(node)) {
-				console.debug(
-					'DEBUG(ssangervasi)',
-					'visit>mismatched, but ancestor',
-					node,
-				)
-
 				return false
 			}
 
-			console.debug('DEBUG(ssangervasi)', 'visit>mismatched, DONE', {
-				expected,
-				received,
-			})
-
-			diffsResults.push({
+			diffResults.push({
 				level: node.level,
 				property: node.property,
 				expected,
@@ -134,17 +118,70 @@ export const diffNarrow = <N extends Narrower>(n: N, u: unknown) => {
 
 			const altAncestor = makeAltSomeAncestor(node)
 			if (altAncestor) {
-				console.debug('DEBUG(ssangervasi)', 'adding alt ancestor', {
-					altAncestor,
-					node,
-				})
-
 				q.push(altAncestor)
 			}
 		},
 	})
 
-	return diffsResults
+	return diffResults
+}
+
+/**
+ * Checks if `node` needs to be traversed and builds the required sub-nodes.
+ */
+const makeDiffNodes = (node: DiffNode): DiffNode[] => {
+	const { expected, received } = node.value
+
+	if (isNarrowerObj(expected) && isRecordObj(received)) {
+		return Object.entries(expected).map(([keySub, expectedSub]): DiffNode => {
+			const receivedSub = received[keySub]
+
+			return {
+				parent: node,
+				level: node.level + 1,
+				property: keySub,
+				value: {
+					expected: expectedSub,
+					received: receivedSub,
+				},
+			}
+		})
+	}
+
+	if (isNarrowerArr(expected) && Array.isArray(received)) {
+		return received.map((receivedSub, receivedIdx): DiffNode => {
+			const expectArrAsSome = some(...expected)
+
+			return {
+				parent: node,
+				level: node.level + 1,
+				property: receivedIdx.toString(),
+				value: {
+					expected: expectArrAsSome,
+					received: receivedSub,
+				},
+			}
+		})
+	}
+
+	if (isNarrowerSome(expected)) {
+		// Every some-arr is shallow-matched against the first entry, so only enqueue a node for the
+		// first entry. If `visit` results in a mismatch down the this branch, `makeAltSomeAncestor`
+		// creates a node with that first branch removed.
+		return [
+			{
+				parent: node,
+				level: node.level,
+				property: node.property,
+				value: {
+					expected: expected[0]!,
+					received,
+				},
+			},
+		]
+	}
+
+	return []
 }
 
 /**
@@ -179,6 +216,11 @@ const findAncestorSome = (leaf: DiffNode): DiffNode | undefined => {
 	})
 }
 
+/**
+ * Searches the node's ancestors for the deepest some-node that has remaining alternative schemas.
+ * If found, the first some-entry is popped and a copy of the node with that (already checked) entry
+ * removed.
+ */
 const makeAltSomeAncestor = (
 	node: TraversalNode<Diff>,
 ): DiffNode | undefined => {
@@ -208,21 +250,17 @@ const makeAltSomeAncestor = (
 	}
 }
 
-const isNarrowerSome = (n: Narrower): n is NarrowerArr & NarrowerSome =>
-	Array.isArray(n) && SOME in n
-
-const isNarrowerArr = (n: Narrower): n is NarrowerArr =>
-	Array.isArray(n) && !(SOME in n)
-
-const isNarrowerObj = (n: Narrower): n is NarrowerObj =>
-	!Array.isArray(n) && typeof n === 'object' && n !== null
-
-const isRecordObj = (u: unknown): u is Record<string, unknown> =>
-	typeof u === 'object' && u !== null && !Array.isArray(u)
-
 const isShallowMatch = (n: Narrower, u: unknown): boolean => {
 	if (typeof n === 'string') {
 		return n === typeof u
+	}
+
+	if (isNarrowerObj(n)) {
+		return isRecordObj(u)
+	}
+
+	if (isNarrowerArr(n)) {
+		return Array.isArray(u)
 	}
 
 	if (isNarrowerSome(n)) {
@@ -234,14 +272,6 @@ const isShallowMatch = (n: Narrower, u: unknown): boolean => {
 		// A shallow match only checks the first entry.
 		const firstNSub = n[0]!
 		return isShallowMatch(firstNSub, u)
-	}
-
-	if (isNarrowerArr(n)) {
-		return Array.isArray(u)
-	}
-
-	if (isNarrowerObj(n)) {
-		return isRecordObj(u)
 	}
 
 	return false

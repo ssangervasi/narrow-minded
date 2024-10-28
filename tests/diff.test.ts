@@ -1,5 +1,6 @@
 import { DiffResult, diffNarrow } from '~/diff'
-import { narrow, Narrower, some } from '~/narrow'
+import { narrow } from '~/narrow'
+import { Narrower, some } from '~/schema'
 
 describe('diffNarrow', () => {
 	describe('depth 0', () => {

@@ -1,88 +1,12 @@
-/**
- * Includes all values that can be returned by a `typeof` expression.
- */
-export type Primitive =
-	| 'string'
-	| 'number'
-	| 'bigint'
-	| 'boolean'
-	| 'symbol'
-	| 'undefined'
-	| 'object'
-	| 'function'
-export type NarrowerArr = Array<
-	Primitive | NarrowerObj | NarrowerArr | NarrowerSome
->
-export interface NarrowerObj {
-	[k: string]: Primitive | NarrowerArr | NarrowerObj | NarrowerSome
-}
-
-/**
- * This is the type that specifies a narrowed structure. The simplest form is a Primitive string,
- * which will validate using a `typeof` comparison. Deeper structures can be defined using objects
- * and arrays that will be validated recursively.
- *
- * @example
- * // An array of mixed strings and numbers:
- * ['string', 'number']
- *
- * // A deep object:
- * {
- * 	n: 'number',
- * 	child: {
- * 		word: 'string'
- * 	},
- * 	things: [
- * 		['number'],
- * 		'boolean'
- * 	],
- * }
- */
-export type Narrower = Primitive | NarrowerArr | NarrowerObj | NarrowerSome
-
-// prettier-ignore
-export type UnPrimitive<N> =
-	N extends 'string'
-	? string
-	: N extends 'number'
-	? number
-	: N extends 'bigint'
-	? bigint
-	: N extends 'boolean'
-	? boolean
-	: N extends 'symbol'
-	? symbol
-	: N extends 'undefined'
-	? undefined
-	: N extends 'object'
-	? object
-	: N extends 'function'
-	? Function
-	: unknown
-
-/* eslint-disable @typescript-eslint/array-type */
-/**
- * This attempts to infer a narrowed type based on a Narrow schema, which results in nice types
- * within conditional blocks. If inference is not possible, the type remains `unknown`.
- *
- * An empty array as a schema is a special case: TypeScript wants to assume the contained type is
- * `never` (the array is empty, so the contents have no type) but this is not useful in practice, so
- * the content type is also replaced with `unknown`.
- */
-// prettier-ignore
-export type UnNarrow<N> =
-	N extends Primitive
-	? UnPrimitive<N>
-	: N extends Array<never>
-	? Array<unknown>
-	: N extends Array<infer N2>
-	? N extends NarrowerSome
-		? UnNarrow<N2>
-		: Array<UnNarrow<N2>>
-	: N extends Record<keyof N, infer _N2>
-	? { [k in keyof N]: UnNarrow<N[k]> }
-	: unknown
-/* eslint-enable @typescript-eslint/array-type */
+import {
+	Narrower,
+	NarrowerArr,
+	NarrowerObj,
+	NarrowerSome,
+	Primitive,
+	SOME,
+	UnNarrow,
+} from './schema'
 
 /**
  * This function validates any value with `typeof` checks. Arrays and objects are traversed
@@ -144,31 +68,6 @@ export const narrow = <
 	u: unknown,
 ): u is UnNarrow<N> => {
 	return _narrow(n, u)
-}
-
-export const SOME = Symbol('SOME')
-export type NarrowerSome = {
-	[SOME]: boolean
-}
-
-/**
- * Decorates a narrower array to indicate narrowing should use the array as a
- * set of options instead of asserting the value is an actual array.
- *
- * @example
- * narrow(some('number'), 1) //=> true
- * narrow({ optional: some('string', 'undefined') }), { optional: 'yep' }) //=> true
- * narrow({ optional: some('string', 'undefined') }), {}) //=> true
- *
- * @param opts The Narrower types that the value must be one of.
- * @returns An array with the SOME symbol set to true.
- */
-export const some = <NA extends NarrowerArr>(
-	...opts: NA
-): NA & NarrowerSome => {
-	return Object.assign(opts, {
-		[SOME]: true,
-	})
 }
 
 /**
