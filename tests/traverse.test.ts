@@ -6,22 +6,56 @@ import {
 	TraversalVisit,
 } from '~/traverse'
 
-const collect = (
-	root: unknown,
-	traversal: (root: unknown, visit: TraversalVisit) => void,
-) => {
+const withCollector = (cb: (visit: (node: TraversalNode) => void) => void) => {
 	const collection: TraversalNode[] = []
-	traversal(root, node => {
+	const visit = (node: TraversalNode) => {
 		collection.push(node)
-	})
+	}
+	cb(visit)
 	return collection
 }
 
+describe('traverse with custom methods', () => {
+	const traverseCustom = (root: number, visit: TraversalVisit<number, void>) =>
+		traverse(root, {
+			visit,
+			dequeue(q) {
+				return q.pop()!
+			},
+			enqueue(n, q) {
+				if (n.value <= 2) {
+					/* empty */
+				} else if (n.value % 2 === 0) {
+					q.push({
+						value: n.value / 2,
+						property: '',
+						level: 0,
+						parent: undefined,
+					})
+				} else {
+					q.push({
+						value: 3 * n.value + 1,
+						property: '',
+						level: 0,
+						parent: undefined,
+					})
+				}
+			},
+		})
+
+	it('solves collatz', () => {
+		const collected = withCollector(visit => traverseCustom(17, visit))
+		expect(collected.map(n => n.value)).toStrictEqual([
+			17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2,
+		])
+	})
+})
+
 describe('traverseObjectDepthFirst', () => {
 	it('works on a primitive', () => {
-		expect(collect('howdy', traverseObjectDepthFirst)).toMatchObject<
-			TraversalNode[]
-		>([
+		expect(
+			withCollector(visit => traverseObjectDepthFirst('howdy', visit)),
+		).toMatchObject<TraversalNode[]>([
 			{
 				property: '',
 				value: 'howdy',
@@ -33,7 +67,9 @@ describe('traverseObjectDepthFirst', () => {
 
 	it('works on an array', () => {
 		const root = ['howdy', ["let's throw", 'a ho-down'], 'partner']
-		const collected = collect(root, traverseObjectDepthFirst)
+		const collected = withCollector(visit =>
+			traverseObjectDepthFirst(root, visit),
+		)
 		expect(collected).toMatchObject<TraversalNode[]>([
 			{
 				property: '',
@@ -83,7 +119,9 @@ describe('traverseObjectDepthFirst', () => {
 			},
 			addressing: 'partner',
 		}
-		const collected = collect(root, traverseObjectDepthFirst)
+		const collected = withCollector(visit =>
+			traverseObjectDepthFirst(root, visit),
+		)
 		expect(collected).toMatchObject<TraversalNode[]>([
 			{
 				property: '',
@@ -127,9 +165,9 @@ describe('traverseObjectDepthFirst', () => {
 
 describe('traverseObjectBreadthFirst', () => {
 	it('works on a primitive', () => {
-		expect(collect('howdy', traverseObjectBreadthFirst)).toMatchObject<
-			TraversalNode[]
-		>([
+		expect(
+			withCollector(visit => traverseObjectBreadthFirst('howdy', visit)),
+		).toMatchObject<TraversalNode[]>([
 			{
 				property: '',
 				value: 'howdy',
@@ -141,7 +179,9 @@ describe('traverseObjectBreadthFirst', () => {
 
 	it('works on an array', () => {
 		const root = ['howdy', ["let's throw", 'a ho-down'], 'partner']
-		const collected = collect(root, traverseObjectBreadthFirst)
+		const collected = withCollector(visit =>
+			traverseObjectBreadthFirst(root, visit),
+		)
 		expect(collected).toMatchObject<TraversalNode[]>([
 			{
 				property: '',
@@ -192,7 +232,9 @@ describe('traverseObjectBreadthFirst', () => {
 			},
 			addressing: 'partner',
 		}
-		const collected = collect(root, traverseObjectBreadthFirst)
+		const collected = withCollector(visit =>
+			traverseObjectBreadthFirst(root, visit),
+		)
 		expect(collected).toMatchObject<TraversalNode[]>([
 			{
 				property: '',

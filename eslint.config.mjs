@@ -62,7 +62,7 @@ export default [
 				},
 			],
 
-			'function-paren-newline': ['error', 'consistent'],
+			// 'function-paren-newline': ['error', 'consistent'],
 			'linebreak-style': ['error', 'unix'],
 
 			quotes: [
