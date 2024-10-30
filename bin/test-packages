@@ -3,12 +3,17 @@
 set -e
 
 ls -1 ./package-examples | while read PACKAGE; do
+	PDIR="./package-examples/$PACKAGE"
+	if [[ ! -d "$PDIR" ]]; then 
+		continue
+	fi
+	
 	echo "
 ---------------------------------
-  "./package-examples/$PACKAGE"
+  "$PDIR"
 ---------------------------------
 "
-	pushd "./package-examples/$PACKAGE"
+	pushd "$PDIR"
 	npm install
 	npm run test
 	popd
